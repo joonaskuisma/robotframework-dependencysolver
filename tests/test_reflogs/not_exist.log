@@ -1,0 +1,10 @@
+[ INFO ] The following arguments were obtained: ('--include', 'C2', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 3'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 3.suiteC'
+[ DEBUG ] Requested test 'Data 3.suiteC.TestC2' because of --include option: 'C2'
+[ DEBUG ] These are tests which user requested: ['Data 3.suiteC.TestC2']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 3.suiteC.TestC2'
+[ DEBUG ] Dependency: 'Data 3.suiteC.TestC2' -> 'Test_Does_Not_Exist'
+[ ERROR ] 'Depends On Test' keyword refers to test 'Test_Does_Not_Exist' that does not exist. Check your spelling. Execution of tests cannot be started!

@@ -1,0 +1,5 @@
+{
+--test Data 1.suiteA.TestA1
+--test Data 1.suiteA.TestA2
+--test Data 1.suiteA.TestA3
+}

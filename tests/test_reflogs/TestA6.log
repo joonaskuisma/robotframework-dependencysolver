@@ -1,0 +1,36 @@
+[ INFO ] The following arguments were obtained: ('--test', 'TestA6', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 1'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 1.suiteA'
+[ DEBUG ] Investigating subsuite 'Data 1.suiteB'
+[ DEBUG ] Requested test 'TestA6' directly.
+[ DEBUG ] These are tests which user requested: ['Data 1.suiteA.TestA6']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 1.suiteA.TestA6'
+[ DEBUG ] Dependency: 'Data 1.suiteA.TestA6' -> 'TestA5'
+[ DEBUG ] Dependency: 'Data 1.suiteA.TestA5' -> 'TestA3'
+[ DEBUG ] Dependency: 'Data 1.suiteA.TestA3' -> 'TestA2'
+[ DEBUG ] Dependency: 'Data 1.suiteA.TestA2' -> 'TestA1'
+[ DEBUG ] Dependency: 'Data 1.suiteA.TestA5' -> 'TestA4'
+[ DEBUG ] Dependency: 'Data 1.suiteA.TestA4' -> 'TestA2'
+[ INFO ] In test case 'Data 1.suiteA.TestA2' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ INFO ] Starting in loop check mode.
+[ DEBUG ] Dependency: 'Data 1.suiteA.TestA2' -> 'TestA1'
+[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] These tests are already check as loop safe: ['Data 1.suiteA.TestA2', 'Data 1.suiteA.TestA1']
+[ DEBUG ] Dependency: 'Data 1.suiteA.TestA2' -> 'TestA1'
+[ DEBUG ] 'Data 1.suiteA.TestA1' has already been checked and does not contain a loop.
+[ DEBUG ] Adding 'Data 1.suiteA.TestA6'
+[ DEBUG ] Adding 'Data 1.suiteA.TestA5'
+[ DEBUG ] Adding 'Data 1.suiteA.TestA3'
+[ DEBUG ] Adding 'Data 1.suiteA.TestA2'
+[ DEBUG ] Adding 'Data 1.suiteA.TestA1'
+[ DEBUG ] Adding 'Data 1.suiteA.TestA4'
+[ INFO ] 6 tests would have been chosen. List of test: ['Data 1.suiteA.TestA6', 'Data 1.suiteA.TestA5', 'Data 1.suiteA.TestA3', 'Data 1.suiteA.TestA2', 'Data 1.suiteA.TestA1', 'Data 1.suiteA.TestA4']
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Started suite: 'Data 1.suiteA'
+[ DEBUG ] Finishing suite: 'Data 1.suiteA'
+[ DEBUG ] Started suite: 'Data 1.suiteB'
+[ DEBUG ] Finishing suite: 'Data 1.suiteB'
+[ DEBUG ] Finishing suite: 'Data 1'

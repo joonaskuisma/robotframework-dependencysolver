@@ -1,3 +1,12 @@
+venv/
+.venv/
+env/
+*log.html
+*output.xml
+*report.html
+depsol.pabot.txt
+depsol.log
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -56,7 +65,6 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal

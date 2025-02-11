@@ -1,0 +1,6 @@
+[ INFO ] The following arguments were obtained: ('--test', 'test_not_exist', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 3'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 3.suiteC'
+[ DEBUG ] Requested test 'test_not_exist' directly.
+[ ERROR ] Argument: 'test_not_exist' does not match any test case. Execution of tests cannot be started!

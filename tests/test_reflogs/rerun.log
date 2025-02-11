@@ -1,0 +1,150 @@
+[ INFO ] The following arguments were obtained: ('--include', 'ALL', '--debug', '--without_timestamps', '--rerun', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ INFO ] Rerunner started
+[ DEBUG ] Re-running test case 'Data 7.Subsuite A.suite D.Test D1'
+[ DEBUG ] Re-running test case 'Data 7.Subsuite A.suite G.Test G1'
+[ DEBUG ] Re-running test case 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2'
+[ DEBUG ] Started suite: 'Data 7'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 7.suite A'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite A'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite A.Subsubsuite A'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite A.Subsubsuite A.suite B'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite A.Subsubsuite A.suite C'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite A.suite D'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite A.Subsubsuite B'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite A.Subsubsuite B.suite E'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite A.Subsubsuite B.suite F'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite A.suite G'
+[ DEBUG ] Investigating subsuite 'Data 7.suite H'
+[ DEBUG ] Investigating subsuite 'Data 7.suite I'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite B'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite B.suite J'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite B.Subsubsuite C'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite B.Subsubsuite C.suite K'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite B.Subsubsuite C.suite L'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite B.suite M'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite B.Subsubsuite D'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite B.Subsubsuite D.suite N'
+[ DEBUG ] Investigating subsuite 'Data 7.Subsuite B.Subsubsuite D.suite O'
+[ DEBUG ] Investigating subsuite 'Data 7.suite P'
+[ DEBUG ] Requested test 'Data 7.suite A.Test A1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.suite A.Test A2' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite A.Subsubsuite A.suite C.Test C1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite A.suite D.Test D1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite A.Subsubsuite B.suite E.Test E1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite A.Subsubsuite B.suite F.Test F1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite A.suite G.Test G1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.suite H.Test H1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.suite I.Test I1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite B.suite J.Test J1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite B.Subsubsuite C.suite K.Test K1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite B.Subsubsuite C.suite L.Test L1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite B.suite M.Test M1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite B.Subsubsuite D.suite N.Test N1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.Subsuite B.Subsubsuite D.suite O.Test O1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 7.suite P.Test P1' because of --include option: 'ALL'
+[ DEBUG ] Rerun mode activated, so tests are only selected based on 'output.xml' or another given file.
+[ DEBUG ] These are tests which user requested: ['Data 7.Subsuite A.suite D.Test D1', 'Data 7.Subsuite A.suite G.Test G1', 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.suite D.Test D1'
+[ DEBUG ] Dependency: 'Data 7.Subsuite A.suite D.Test D1' -> 'Test B2'
+[ DEBUG ] Dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' -> 'Test A1'
+[ DEBUG ] 'Data 7.Subsuite A.suite D.Test D1' is already added.
+[ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' is already added.
+[ DEBUG ] Adding 'Data 7.suite A.Test A1'
+[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.suite G.Test G1'
+[ DEBUG ] Dependency: 'Data 7.Subsuite A.suite G.Test G1' -> 'suite B'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.suite G.Test G1' -> 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1'
+[ DEBUG ] Dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'suite A'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'Data 7.suite A.Test A1'
+[ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'Data 7.suite A.Test A2'
+[ DEBUG ] Dependency: 'Data 7.suite A.Test A2' -> 'Test A1'
+[ INFO ] In test case 'Data 7.suite A.Test A1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ INFO ] Starting in loop check mode.
+[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] These tests are already check as loop safe: ['Data 7.suite A.Test A1']
+[ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.suite G.Test G1' -> 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2'
+[ DEBUG ] Dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' -> 'Test A1'
+[ DEBUG ] 'Data 7.suite A.Test A1' has already been checked and does not contain a loop.
+[ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.suite G.Test G1' -> 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3'
+[ DEBUG ] 'Data 7.Subsuite A.suite G.Test G1' is already added.
+[ DEBUG ] Adding 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1'
+[ DEBUG ] 'Data 7.suite A.Test A1' is already added.
+[ DEBUG ] Adding 'Data 7.suite A.Test A2'
+[ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' is already added.
+[ DEBUG ] Adding 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3'
+[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2'
+[ DEBUG ] Dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' -> 'Test A1'
+[ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' is already added.
+[ DEBUG ] 'Data 7.suite A.Test A1' is already added.
+[ INFO ] Checking relation chain for test 'Data 7.suite A.Test A1'
+[ DEBUG ] 'Data 7.suite A.Test A1' is already added.
+[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1'
+[ DEBUG ] Dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'suite A'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'Data 7.suite A.Test A1'
+[ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'Data 7.suite A.Test A2'
+[ DEBUG ] Dependency: 'Data 7.suite A.Test A2' -> 'Test A1'
+[ DEBUG ] 'Data 7.suite A.Test A1' has already been checked and does not contain a loop.
+[ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' is already added.
+[ DEBUG ] 'Data 7.suite A.Test A1' is already added.
+[ DEBUG ] 'Data 7.suite A.Test A2' is already added.
+[ INFO ] Checking relation chain for test 'Data 7.suite A.Test A2'
+[ DEBUG ] Dependency: 'Data 7.suite A.Test A2' -> 'Test A1'
+[ DEBUG ] 'Data 7.suite A.Test A2' is already added.
+[ DEBUG ] 'Data 7.suite A.Test A1' is already added.
+[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3'
+[ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3' is already added.
+[ INFO ] 7 tests would have been chosen. List of test: ['Data 7.Subsuite A.suite D.Test D1', 'Data 7.Subsuite A.suite G.Test G1', 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2', 'Data 7.suite A.Test A1', 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1', 'Data 7.suite A.Test A2', 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3']
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Started suite: 'Data 7.suite A'
+[ DEBUG ] Finishing suite: 'Data 7.suite A'
+[ DEBUG ] Started suite: 'Data 7.Subsuite A'
+[ DEBUG ] Started suite: 'Data 7.Subsuite A.Subsubsuite A'
+[ DEBUG ] Started suite: 'Data 7.Subsuite A.Subsubsuite A.suite B'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite A.Subsubsuite A.suite B'
+[ DEBUG ] Started suite: 'Data 7.Subsuite A.Subsubsuite A.suite C'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite A.Subsubsuite A.suite C'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite A.Subsubsuite A'
+[ DEBUG ] Started suite: 'Data 7.Subsuite A.suite D'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite A.suite D'
+[ DEBUG ] Started suite: 'Data 7.Subsuite A.Subsubsuite B'
+[ DEBUG ] Started suite: 'Data 7.Subsuite A.Subsubsuite B.suite E'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite A.Subsubsuite B.suite E'
+[ DEBUG ] Started suite: 'Data 7.Subsuite A.Subsubsuite B.suite F'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite A.Subsubsuite B.suite F'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite A.Subsubsuite B'
+[ DEBUG ] Started suite: 'Data 7.Subsuite A.suite G'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite A.suite G'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite A'
+[ DEBUG ] Started suite: 'Data 7.suite H'
+[ DEBUG ] Finishing suite: 'Data 7.suite H'
+[ DEBUG ] Started suite: 'Data 7.suite I'
+[ DEBUG ] Finishing suite: 'Data 7.suite I'
+[ DEBUG ] Started suite: 'Data 7.Subsuite B'
+[ DEBUG ] Started suite: 'Data 7.Subsuite B.suite J'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite B.suite J'
+[ DEBUG ] Started suite: 'Data 7.Subsuite B.Subsubsuite C'
+[ DEBUG ] Started suite: 'Data 7.Subsuite B.Subsubsuite C.suite K'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite B.Subsubsuite C.suite K'
+[ DEBUG ] Started suite: 'Data 7.Subsuite B.Subsubsuite C.suite L'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite B.Subsubsuite C.suite L'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite B.Subsubsuite C'
+[ DEBUG ] Started suite: 'Data 7.Subsuite B.suite M'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite B.suite M'
+[ DEBUG ] Started suite: 'Data 7.Subsuite B.Subsubsuite D'
+[ DEBUG ] Started suite: 'Data 7.Subsuite B.Subsubsuite D.suite N'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite B.Subsubsuite D.suite N'
+[ DEBUG ] Started suite: 'Data 7.Subsuite B.Subsubsuite D.suite O'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite B.Subsubsuite D.suite O'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite B.Subsubsuite D'
+[ DEBUG ] Finishing suite: 'Data 7.Subsuite B'
+[ DEBUG ] Started suite: 'Data 7.suite P'
+[ DEBUG ] Finishing suite: 'Data 7.suite P'
+[ DEBUG ] Finishing suite: 'Data 7'

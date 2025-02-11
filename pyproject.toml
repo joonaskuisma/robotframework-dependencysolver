@@ -1,0 +1,42 @@
+[build-system]
+requires = [
+  "setuptools>=61.0",
+  "robotframework>=7.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robotframework-dependencysolver"
+dynamic = ["version"]
+dependencies = [
+  "robotframework>=7.0.0",
+  "robotframework-dependencylibrary>=4.0.0",
+]
+requires-python = ">=3.8"
+authors = [
+  { name="Joonas Kuisma", email="kuisma.joonas@gmail.com" },
+]
+description="Defining interdependent test cases and managing test execution."
+readme = "README.md"
+license = {file = "LICENSE"}
+
+keywords = ["Robot Framework", "DependencySolver", "prerunmodifier"]
+classifiers = [
+    #"Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Testing",
+    "Framework :: Robot Framework :: Library",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+depsol = "DependencySolver.run:main"
+
+[project.urls]
+Homepage = "https://github.com/joonaskuisma/robotframework-dependencysolver"
+Issues = "https://github.com/joonaskuisma/robotframework-dependencysolver/issues"
+
+[tool.setuptools.dynamic]
+version = {attr = "DependencySolver._version.__version__"}

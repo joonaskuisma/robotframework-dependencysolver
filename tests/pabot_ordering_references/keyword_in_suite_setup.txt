@@ -1,0 +1,9 @@
+{
+--test Data 11.suite A.Test A1
+--test Data 11.suite A.Test A2 #DEPENDS Data 11.suite A.Test A1
+--test Data 11.Subsuite A.Subsubsuite B.suite E.Test E1 #DEPENDS Data 11.suite A.Test A1 #DEPENDS Data 11.suite A.Test A2
+--test Data 11.Subsuite A.Subsubsuite B.suite F.Test F1 #DEPENDS Data 11.suite A.Test A1 #DEPENDS Data 11.suite A.Test A2
+--test Data 11.suite H.Test H1
+--test Data 11.Subsuite B.Subsubsuite C.suite K.Test K1 #DEPENDS Data 11.suite H.Test H1 #DEPENDS Data 11.Subsuite A.Subsubsuite B.suite E.Test E1 #DEPENDS Data 11.Subsuite A.Subsubsuite B.suite F.Test F1
+--test Data 11.Subsuite B.Subsubsuite D.suite O.Test O1 #DEPENDS Data 11.Subsuite B.Subsubsuite C.suite K.Test K1 #DEPENDS Data 11.suite H.Test H1
+}

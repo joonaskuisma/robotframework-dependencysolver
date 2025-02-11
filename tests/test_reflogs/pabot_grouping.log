@@ -1,0 +1,70 @@
+[ INFO ] The following arguments were obtained: ('--include', 'ALL', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 8'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 8.suiteA'
+[ DEBUG ] Investigating subsuite 'Data 8.suiteB'
+[ DEBUG ] Requested test 'Data 8.suiteA.TestA0' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteA.TestA1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteA.TestA2' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteA.TestA3' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteA.TestA4' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteA.TestA5' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteA.TestA6' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteB.TestB1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteB.TestB2' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteB.TestB3' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteB.TestB4' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteB.TestB5' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'Data 8.suiteB.TestB6' because of --include option: 'ALL'
+[ DEBUG ] These are tests which user requested: ['Data 8.suiteA.TestA0', 'Data 8.suiteA.TestA1', 'Data 8.suiteA.TestA2', 'Data 8.suiteA.TestA3', 'Data 8.suiteA.TestA4', 'Data 8.suiteA.TestA5', 'Data 8.suiteA.TestA6', 'Data 8.suiteB.TestB1', 'Data 8.suiteB.TestB2', 'Data 8.suiteB.TestB3', 'Data 8.suiteB.TestB4', 'Data 8.suiteB.TestB5', 'Data 8.suiteB.TestB6']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 8.suiteA.TestA0'
+[ DEBUG ] Adding 'Data 8.suiteA.TestA0'
+[ INFO ] Checking relation chain for test 'Data 8.suiteA.TestA1'
+[ DEBUG ] Adding 'Data 8.suiteA.TestA1'
+[ INFO ] Checking relation chain for test 'Data 8.suiteA.TestA2'
+[ DEBUG ] Adding 'Data 8.suiteA.TestA2'
+[ INFO ] Checking relation chain for test 'Data 8.suiteA.TestA3'
+[ DEBUG ] Dependency: 'Data 8.suiteA.TestA3' -> 'TestA1'
+[ DEBUG ] Dependency: 'Data 8.suiteA.TestA3' -> 'TestA2'
+[ DEBUG ] Adding 'Data 8.suiteA.TestA3'
+[ DEBUG ] 'Data 8.suiteA.TestA1' is already added.
+[ DEBUG ] 'Data 8.suiteA.TestA2' is already added.
+[ INFO ] Checking relation chain for test 'Data 8.suiteA.TestA4'
+[ DEBUG ] Dependency: 'Data 8.suiteA.TestA4' -> 'TestA0'
+[ DEBUG ] Adding 'Data 8.suiteA.TestA4'
+[ DEBUG ] 'Data 8.suiteA.TestA0' is already added.
+[ INFO ] Checking relation chain for test 'Data 8.suiteA.TestA5'
+[ DEBUG ] Adding 'Data 8.suiteA.TestA5'
+[ INFO ] Checking relation chain for test 'Data 8.suiteA.TestA6'
+[ DEBUG ] Dependency: 'Data 8.suiteA.TestA6' -> 'TestA5'
+[ DEBUG ] Adding 'Data 8.suiteA.TestA6'
+[ DEBUG ] 'Data 8.suiteA.TestA5' is already added.
+[ INFO ] Checking relation chain for test 'Data 8.suiteB.TestB1'
+[ DEBUG ] Adding 'Data 8.suiteB.TestB1'
+[ INFO ] Checking relation chain for test 'Data 8.suiteB.TestB2'
+[ DEBUG ] Adding 'Data 8.suiteB.TestB2'
+[ INFO ] Checking relation chain for test 'Data 8.suiteB.TestB3'
+[ DEBUG ] Adding 'Data 8.suiteB.TestB3'
+[ INFO ] Checking relation chain for test 'Data 8.suiteB.TestB4'
+[ DEBUG ] Dependency: 'Data 8.suiteB.TestB4' -> 'TestB3'
+[ DEBUG ] Adding 'Data 8.suiteB.TestB4'
+[ DEBUG ] 'Data 8.suiteB.TestB3' is already added.
+[ INFO ] Checking relation chain for test 'Data 8.suiteB.TestB5'
+[ DEBUG ] Dependency: 'Data 8.suiteB.TestB5' -> 'TestB1'
+[ DEBUG ] Dependency: 'Data 8.suiteB.TestB5' -> 'TestA2'
+[ DEBUG ] Dependency: 'Data 8.suiteB.TestB5' -> 'TestA0'
+[ DEBUG ] Adding 'Data 8.suiteB.TestB5'
+[ DEBUG ] 'Data 8.suiteB.TestB1' is already added.
+[ DEBUG ] 'Data 8.suiteA.TestA2' is already added.
+[ DEBUG ] 'Data 8.suiteA.TestA0' is already added.
+[ INFO ] Checking relation chain for test 'Data 8.suiteB.TestB6'
+[ DEBUG ] Adding 'Data 8.suiteB.TestB6'
+[ INFO ] 13 tests would have been chosen. List of test: ['Data 8.suiteA.TestA0', 'Data 8.suiteA.TestA1', 'Data 8.suiteA.TestA2', 'Data 8.suiteA.TestA3', 'Data 8.suiteA.TestA4', 'Data 8.suiteA.TestA5', 'Data 8.suiteA.TestA6', 'Data 8.suiteB.TestB1', 'Data 8.suiteB.TestB2', 'Data 8.suiteB.TestB3', 'Data 8.suiteB.TestB4', 'Data 8.suiteB.TestB5', 'Data 8.suiteB.TestB6']
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Started suite: 'Data 8.suiteA'
+[ DEBUG ] Finishing suite: 'Data 8.suiteA'
+[ DEBUG ] Started suite: 'Data 8.suiteB'
+[ DEBUG ] Finishing suite: 'Data 8.suiteB'
+[ DEBUG ] Finishing suite: 'Data 8'

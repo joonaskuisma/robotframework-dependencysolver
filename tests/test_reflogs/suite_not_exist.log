@@ -1,0 +1,16 @@
+[ INFO ] The following arguments were obtained: ('--suite', 'suiteC', '--exclude', 'C2', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 3'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 3.suiteC'
+[ DEBUG ] Requested test 'Data 3.suiteC.TestC1' because of subsuite or direct --suite option: 'suiteC'
+[ DEBUG ] Requested test 'Data 3.suiteC.TestC2' because of subsuite or direct --suite option: 'suiteC'
+[ DEBUG ] Requested test 'Data 3.suiteC.TestC3' because of subsuite or direct --suite option: 'suiteC'
+[ DEBUG ] Not requested test 'Data 3.suiteC.TestC2' because of --exclude option: 'C2'
+[ DEBUG ] These are tests which user requested: ['Data 3.suiteC.TestC1', 'Data 3.suiteC.TestC3']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 3.suiteC.TestC1'
+[ DEBUG ] Adding 'Data 3.suiteC.TestC1'
+[ INFO ] Checking relation chain for test 'Data 3.suiteC.TestC3'
+[ DEBUG ] Dependency: 'Data 3.suiteC.TestC3' -> 'Suite_Does_Not_Exist'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ ERROR ] 'Depends On Suite' keyword refers to suite 'Suite_Does_Not_Exist' that does not exist. Check your spelling. Execution of tests cannot be started!

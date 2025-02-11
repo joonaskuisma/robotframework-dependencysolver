@@ -1,0 +1,29 @@
+[ INFO ] The following arguments were obtained: ('--include', 'A2', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 10'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 10.suite A'
+[ DEBUG ] Investigating subsuite 'Data 10.suite A copy'
+[ DEBUG ] Requested test 'Data 10.suite A.Test A2' because of --include option: 'A2'
+[ DEBUG ] Requested test 'Data 10.suite A copy.Test A2' because of --include option: 'A2'
+[ DEBUG ] These are tests which user requested: ['Data 10.suite A.Test A2', 'Data 10.suite A copy.Test A2']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 10.suite A.Test A2'
+[ DEBUG ] Dependency: 'Data 10.suite A.Test A2' -> 'Test A1'
+[ WARNING ] Dependence in test 'Data 10.suite A.Test A2' is 'Test A1' which is not unambiguous but refers to the following tests: ['Data 10.suite A.Test A1', 'Data 10.suite A copy.Test A1']
+[ DEBUG ] Adding 'Data 10.suite A.Test A2'
+[ DEBUG ] Adding 'Data 10.suite A.Test A1'
+[ DEBUG ] Adding 'Data 10.suite A copy.Test A1'
+[ INFO ] Checking relation chain for test 'Data 10.suite A copy.Test A2'
+[ DEBUG ] Dependency: 'Data 10.suite A copy.Test A2' -> 'Test A1'
+[ WARNING ] Dependence in test 'Data 10.suite A copy.Test A2' is 'Test A1' which is not unambiguous but refers to the following tests: ['Data 10.suite A.Test A1', 'Data 10.suite A copy.Test A1']
+[ DEBUG ] Adding 'Data 10.suite A copy.Test A2'
+[ DEBUG ] 'Data 10.suite A.Test A1' is already added.
+[ DEBUG ] 'Data 10.suite A copy.Test A1' is already added.
+[ INFO ] 4 tests would have been chosen. List of test: ['Data 10.suite A.Test A2', 'Data 10.suite A.Test A1', 'Data 10.suite A copy.Test A1', 'Data 10.suite A copy.Test A2']
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Started suite: 'Data 10.suite A'
+[ DEBUG ] Finishing suite: 'Data 10.suite A'
+[ DEBUG ] Started suite: 'Data 10.suite A copy'
+[ DEBUG ] Finishing suite: 'Data 10.suite A copy'
+[ DEBUG ] Finishing suite: 'Data 10'

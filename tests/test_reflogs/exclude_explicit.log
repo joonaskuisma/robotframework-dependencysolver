@@ -1,0 +1,21 @@
+[ INFO ] The following arguments were obtained: ('--include', 'A2', '--exclude_explicit', 'A1', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 1'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 1.suiteA'
+[ DEBUG ] Investigating subsuite 'Data 1.suiteB'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA2' because of --include option: 'A2'
+[ DEBUG ] Not requested test 'Data 1.suiteA.TestA1' in any case, because of --exclude_explicit option: 'A1'
+[ DEBUG ] These are tests which user requested: ['Data 1.suiteA.TestA2']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 1.suiteA.TestA2'
+[ DEBUG ] Dependency: 'Data 1.suiteA.TestA2' -> 'TestA1'
+[ INFO ] Because --exclude_explicit argument, not requested test: 'Data 1.suiteA.TestA1', so skipping this whole relation chain. Adding nothing and moving next relation chain...
+[ WARNING ] No tests chosen.
+[ INFO ] 0 tests would have been chosen. List of test: []
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Started suite: 'Data 1.suiteA'
+[ DEBUG ] Finishing suite: 'Data 1.suiteA'
+[ DEBUG ] Started suite: 'Data 1.suiteB'
+[ DEBUG ] Finishing suite: 'Data 1.suiteB'
+[ DEBUG ] Finishing suite: 'Data 1'

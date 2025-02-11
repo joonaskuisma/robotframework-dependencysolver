@@ -1,0 +1,12 @@
+[ INFO ] The following arguments were obtained: ('--include', 'tag_not_exist', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 3'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 3.suiteC'
+[ WARNING ] Given tag: 'tag_not_exist' not found from any tests. Check your spelling.
+[ WARNING ] No tests chosen.
+[ INFO ] 0 tests would have been chosen. List of test: []
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Started suite: 'Data 3.suiteC'
+[ DEBUG ] Finishing suite: 'Data 3.suiteC'
+[ DEBUG ] Finishing suite: 'Data 3'

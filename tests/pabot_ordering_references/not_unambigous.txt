@@ -1,0 +1,6 @@
+{
+--test Data 10.suite A.Test A1
+--test Data 10.suite A.Test A2 #DEPENDS Data 10.suite A.Test A1 #DEPENDS Data 10.suite A copy.Test A1
+--test Data 10.suite A copy.Test A1
+--test Data 10.suite A copy.Test A2 #DEPENDS Data 10.suite A.Test A1 #DEPENDS Data 10.suite A copy.Test A1
+}

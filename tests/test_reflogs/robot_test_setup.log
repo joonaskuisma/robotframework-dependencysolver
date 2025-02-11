@@ -1,0 +1,38 @@
+[ INFO ] The following arguments were obtained: ('--include', 'B4', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 9'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 9.suiteA'
+[ DEBUG ] Investigating subsuite 'Data 9.suiteB'
+[ DEBUG ] Requested test 'Data 9.suiteB.TestB4' because of --include option: 'B4'
+[ DEBUG ] These are tests which user requested: ['Data 9.suiteB.TestB4']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 9.suiteB.TestB4'
+[ DEBUG ] Dependency: 'Data 9.suiteB.TestB4' -> 'TestB3'
+[ DEBUG ] Dependency: 'Data 9.suiteB.TestB3' -> 'suiteA'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 9.suiteB.TestB3' -> 'Data 9.suiteA.TestA1'
+[ DEBUG ] Transformed dependency: 'Data 9.suiteB.TestB3' -> 'Data 9.suiteA.TestA2'
+[ DEBUG ] Transformed dependency: 'Data 9.suiteB.TestB3' -> 'Data 9.suiteA.TestA3'
+[ DEBUG ] Dependency: 'Data 9.suiteA.TestA3' -> 'TestA1'
+[ INFO ] In test case 'Data 9.suiteA.TestA1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ INFO ] Starting in loop check mode.
+[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] These tests are already check as loop safe: ['Data 9.suiteA.TestA1']
+[ DEBUG ] Dependency: 'Data 9.suiteA.TestA3' -> 'TestA2'
+[ INFO ] In test case 'Data 9.suiteA.TestA2' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ INFO ] Starting in loop check mode.
+[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] These tests are already check as loop safe: ['Data 9.suiteA.TestA1', 'Data 9.suiteA.TestA2']
+[ DEBUG ] Adding 'Data 9.suiteB.TestB4'
+[ DEBUG ] Adding 'Data 9.suiteB.TestB3'
+[ DEBUG ] Adding 'Data 9.suiteA.TestA1'
+[ DEBUG ] Adding 'Data 9.suiteA.TestA2'
+[ DEBUG ] Adding 'Data 9.suiteA.TestA3'
+[ INFO ] 5 tests would have been chosen. List of test: ['Data 9.suiteB.TestB4', 'Data 9.suiteB.TestB3', 'Data 9.suiteA.TestA1', 'Data 9.suiteA.TestA2', 'Data 9.suiteA.TestA3']
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Started suite: 'Data 9.suiteA'
+[ DEBUG ] Finishing suite: 'Data 9.suiteA'
+[ DEBUG ] Started suite: 'Data 9.suiteB'
+[ DEBUG ] Finishing suite: 'Data 9.suiteB'
+[ DEBUG ] Finishing suite: 'Data 9'

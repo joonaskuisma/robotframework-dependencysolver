@@ -1,0 +1,5 @@
+[ INFO ] The following arguments were obtained: ('--suite', 'suite_not_exist', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 3'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 3.suiteC'
+[ ERROR ] Argument: 'suite_not_exist' not found in test suites. Execution of tests cannot be started!

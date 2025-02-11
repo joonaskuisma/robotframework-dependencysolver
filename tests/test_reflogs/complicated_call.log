@@ -1,0 +1,50 @@
+[ INFO ] The following arguments were obtained: ('--test', 'suite*.T*t[AB]?', '--test', 'Test[!Bb]1', '--test', 'Test[AB][!2-6]', '--suite', 'data_1.*[Aa]', '--include', 'allANDAORtestBNOTt3', '--include', 't1ANDallANDA', '--exclude', 'allANDt2', '--exclude', 'NOT[AB]1', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 1'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 1.suiteA'
+[ DEBUG ] Investigating subsuite 'Data 1.suiteB'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA1' because of subsuite or direct --suite option: 'data_1.*[Aa]'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA2' because of subsuite or direct --suite option: 'data_1.*[Aa]'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA3' because of subsuite or direct --suite option: 'data_1.*[Aa]'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA4' because of subsuite or direct --suite option: 'data_1.*[Aa]'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA5' because of subsuite or direct --suite option: 'data_1.*[Aa]'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA6' because of subsuite or direct --suite option: 'data_1.*[Aa]'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA1' because of --include option: 'allANDAORtestBNOTt3'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA2' because of --include option: 'allANDAORtestBNOTt3'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA3' because of --include option: 'allANDAORtestBNOTt3'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA4' because of --include option: 'allANDAORtestBNOTt3'
+[ DEBUG ] Requested test 'Data 1.suiteB.TestB1' because of --include option: 'allANDAORtestBNOTt3'
+[ DEBUG ] Requested test 'Data 1.suiteB.TestB2' because of --include option: 'allANDAORtestBNOTt3'
+[ DEBUG ] Requested test 'Data 1.suiteB.TestB3' because of --include option: 'allANDAORtestBNOTt3'
+[ DEBUG ] Requested test 'Data 1.suiteB.TestB4' because of --include option: 'allANDAORtestBNOTt3'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA1' because of --include option: 't1ANDallANDA'
+[ DEBUG ] Requested test 'Data 1.suiteA.TestA2' because of --include option: 't1ANDallANDA'
+[ DEBUG ] Not requested test 'Data 1.suiteA.TestA3' because of --exclude option: 'allANDt2'
+[ DEBUG ] Not requested test 'Data 1.suiteA.TestA4' because of --exclude option: 'allANDt2'
+[ DEBUG ] Not requested test 'Data 1.suiteB.TestB3' because of --exclude option: 'allANDt2'
+[ DEBUG ] Not requested test 'Data 1.suiteB.TestB4' because of --exclude option: 'allANDt2'
+[ DEBUG ] Not requested test 'Data 1.suiteA.TestA2' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Not requested test 'Data 1.suiteA.TestA3' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Not requested test 'Data 1.suiteA.TestA4' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Not requested test 'Data 1.suiteA.TestA5' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Not requested test 'Data 1.suiteA.TestA6' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Not requested test 'Data 1.suiteB.TestB2' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Not requested test 'Data 1.suiteB.TestB3' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Not requested test 'Data 1.suiteB.TestB4' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Not requested test 'Data 1.suiteB.TestB5' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Not requested test 'Data 1.suiteB.TestB6' because of --exclude option: 'NOT[AB]1'
+[ DEBUG ] Requested test 'suite*.T*t[AB]?' directly.
+[ DEBUG ] Requested test 'Test[!Bb]1' directly.
+[ DEBUG ] Requested test 'Test[AB][!2-6]' directly.
+[ DEBUG ] These are tests which user requested: ['Data 1.suiteA.TestA1']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 1.suiteA.TestA1'
+[ DEBUG ] Adding 'Data 1.suiteA.TestA1'
+[ INFO ] 1 tests would have been chosen. List of test: ['Data 1.suiteA.TestA1']
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Started suite: 'Data 1.suiteA'
+[ DEBUG ] Finishing suite: 'Data 1.suiteA'
+[ DEBUG ] Started suite: 'Data 1.suiteB'
+[ DEBUG ] Finishing suite: 'Data 1.suiteB'
+[ DEBUG ] Finishing suite: 'Data 1'

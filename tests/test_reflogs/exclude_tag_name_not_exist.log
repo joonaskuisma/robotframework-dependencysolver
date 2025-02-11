@@ -1,0 +1,12 @@
+[ INFO ] The following arguments were obtained: ('--exclude', 'tag_not_exist', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 3'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 3.suiteC'
+[ WARNING ] Selecting all test cases in given folder, because only --exclude argument(s) given and it does not match any tags.
+[ DEBUG ] These are tests which user requested: ['Data 3.suiteC.TestC1', 'Data 3.suiteC.TestC2', 'Data 3.suiteC.TestC3']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 3.suiteC.TestC1'
+[ DEBUG ] Adding 'Data 3.suiteC.TestC1'
+[ INFO ] Checking relation chain for test 'Data 3.suiteC.TestC2'
+[ DEBUG ] Dependency: 'Data 3.suiteC.TestC2' -> 'Test_Does_Not_Exist'
+[ ERROR ] 'Depends On Test' keyword refers to test 'Test_Does_Not_Exist' that does not exist. Check your spelling. Execution of tests cannot be started!

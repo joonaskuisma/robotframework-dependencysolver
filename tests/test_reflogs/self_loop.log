@@ -1,0 +1,17 @@
+[ INFO ] The following arguments were obtained: ('--include', 'testC', '--exclude', 'C1', '--exclude', 'C2', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 2'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 2.suiteC'
+[ DEBUG ] Requested test 'Data 2.suiteC.TestC1' because of --include option: 'testC'
+[ DEBUG ] Requested test 'Data 2.suiteC.TestC2' because of --include option: 'testC'
+[ DEBUG ] Requested test 'Data 2.suiteC.TestC3' because of --include option: 'testC'
+[ DEBUG ] Not requested test 'Data 2.suiteC.TestC1' because of --exclude option: 'C1'
+[ DEBUG ] Not requested test 'Data 2.suiteC.TestC2' because of --exclude option: 'C2'
+[ DEBUG ] These are tests which user requested: ['Data 2.suiteC.TestC3']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 2.suiteC.TestC3'
+[ DEBUG ] Dependency: 'Data 2.suiteC.TestC3' -> 'TestC3'
+[ INFO ] In test case 'Data 2.suiteC.TestC3' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ INFO ] Starting in loop check mode.
+[ DEBUG ] Dependency: 'Data 2.suiteC.TestC3' -> 'TestC3'
+[ ERROR ] Dependencies are cyclical! Test case 'Data 2.suiteC.TestC3' is already part of the relation chain: dict_values(['Data 2.suiteC.TestC3']) Execution of tests cannot be started!

@@ -1,0 +1,152 @@
+[ INFO ] The following arguments were obtained: ('--suite', 'suite O', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ DEBUG ] Started suite: 'Data 11'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Investigating subsuite 'Data 11.suite A'
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite A'
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite A.Subsubsuite A'
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite A.Subsubsuite A.suite B'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite A.Subsubsuite A.suite B.Test B1' because 'Data 11.Subsuite A.Subsubsuite A.suite B' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite A.Subsubsuite A.suite B.Test B1' has dependencies for tests: [] and suites: ['suite A']
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite A.Subsubsuite A.suite B.Test B2' because 'Data 11.Subsuite A.Subsubsuite A.suite B' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite A.Subsubsuite A.suite B.Test B2' has dependencies for tests: ['Test B1'] and suites: ['suite A']
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite A.Subsubsuite A.suite B.Test B3' because 'Data 11.Subsuite A.Subsubsuite A.suite B' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite A.Subsubsuite A.suite B.Test B3' has dependencies for tests: ['Test B2'] and suites: ['suite A']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite A.Subsubsuite A.suite C'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite A.Subsubsuite A.suite C.Test C1' because 'Data 11.Subsuite A.Subsubsuite A.suite C' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite A.Subsubsuite A.suite C.Test C1' has dependencies for tests: [] and suites: ['suite A']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite A.suite D'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite A.suite D.Test D1' because 'Data 11.Subsuite A.suite D' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite A.suite D.Test D1' has dependencies for tests: ['Test B2'] and suites: ['suite A']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite A.Subsubsuite B'
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite A.Subsubsuite B.suite E'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1' because 'Data 11.Subsuite A.Subsubsuite B.suite E' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1' has dependencies for tests: [] and suites: ['suite A']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite A.Subsubsuite B.suite F'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1' because 'Data 11.Subsuite A.Subsubsuite B.suite F' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1' has dependencies for tests: [] and suites: ['suite A']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite A.suite G'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite A.suite G.Test G1' because 'Data 11.Subsuite A.suite G' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite A.suite G.Test G1' has dependencies for tests: [] and suites: ['suite B', 'suite A']
+[ DEBUG ] Investigating subsuite 'Data 11.suite H'
+[ DEBUG ] Investigating subsuite 'Data 11.suite I'
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite B'
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite B.suite J'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite B.suite J.Test J1' because 'Data 11.Subsuite B.suite J' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite B.suite J.Test J1' has dependencies for tests: [] and suites: ['suite H']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite B.Subsubsuite C'
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite B.Subsubsuite C.suite K'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1' because 'Data 11.Subsuite B.Subsubsuite C.suite K' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1' has dependencies for tests: [] and suites: ['suite H', 'suite E', 'suite F']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite B.Subsubsuite C.suite L'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite B.Subsubsuite C.suite L.Test L1' because 'Data 11.Subsuite B.Subsubsuite C.suite L' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite B.Subsubsuite C.suite L.Test L1' has dependencies for tests: [] and suites: ['suite H', 'suite E', 'suite F']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite B.suite M'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite B.suite M.Test M1' because 'Data 11.Subsuite B.suite M' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite B.suite M.Test M1' has dependencies for tests: [] and suites: ['suite H']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite B.Subsubsuite D'
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite B.Subsubsuite D.suite N'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite B.Subsubsuite D.suite N.Test N1' because 'Data 11.Subsuite B.Subsubsuite D.suite N' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite B.Subsubsuite D.suite N.Test N1' has dependencies for tests: [] and suites: ['suite H']
+[ DEBUG ] Investigating subsuite 'Data 11.Subsuite B.Subsubsuite D.suite O'
+[ DEBUG ] Merging depencencies in test 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' because 'Data 11.Subsuite B.Subsubsuite D.suite O' or its parent suite has 'Suite Setup' with 'Depends On' keyword.
+[ DEBUG ] Test 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' has dependencies for tests: [] and suites: ['Suite K', 'suite H']
+[ DEBUG ] Investigating subsuite 'Data 11.suite P'
+[ DEBUG ] Requested test 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' because of subsuite or direct --suite option: 'suite O'
+[ DEBUG ] These are tests which user requested: ['Data 11.Subsuite B.Subsubsuite D.suite O.Test O1']
+[ INFO ] Starting relation chain checking...
+[ INFO ] Checking relation chain for test 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1'
+[ DEBUG ] Dependency: 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' -> 'Suite K'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' -> 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1'
+[ DEBUG ] Dependency: 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1' -> 'suite H'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1' -> 'Data 11.suite H.Test H1'
+[ DEBUG ] Dependency: 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1' -> 'suite E'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1' -> 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1'
+[ DEBUG ] Dependency: 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1' -> 'suite A'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1' -> 'Data 11.suite A.Test A1'
+[ DEBUG ] Transformed dependency: 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1' -> 'Data 11.suite A.Test A2'
+[ DEBUG ] Dependency: 'Data 11.suite A.Test A2' -> 'Test A1'
+[ INFO ] In test case 'Data 11.suite A.Test A1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ INFO ] Starting in loop check mode.
+[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] These tests are already check as loop safe: ['Data 11.suite A.Test A1']
+[ DEBUG ] Dependency: 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1' -> 'suite F'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1' -> 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1'
+[ DEBUG ] Dependency: 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1' -> 'suite A'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1' -> 'Data 11.suite A.Test A1'
+[ DEBUG ] 'Data 11.suite A.Test A1' has already been checked and does not contain a loop.
+[ DEBUG ] Transformed dependency: 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1' -> 'Data 11.suite A.Test A2'
+[ INFO ] In test case 'Data 11.suite A.Test A2' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ INFO ] Starting in loop check mode.
+[ DEBUG ] Dependency: 'Data 11.suite A.Test A2' -> 'Test A1'
+[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] These tests are already check as loop safe: ['Data 11.suite A.Test A1', 'Data 11.suite A.Test A2', 'Data 11.suite A.Test A1']
+[ DEBUG ] Dependency: 'Data 11.suite A.Test A2' -> 'Test A1'
+[ DEBUG ] 'Data 11.suite A.Test A1' has already been checked and does not contain a loop.
+[ DEBUG ] Dependency: 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' -> 'suite H'
+[ DEBUG ] Transforming suite dependency to test dependencies...
+[ DEBUG ] Transformed dependency: 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' -> 'Data 11.suite H.Test H1'
+[ INFO ] In test case 'Data 11.suite H.Test H1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ INFO ] Starting in loop check mode.
+[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] These tests are already check as loop safe: ['Data 11.suite A.Test A1', 'Data 11.suite A.Test A2', 'Data 11.suite A.Test A1', 'Data 11.suite H.Test H1']
+[ DEBUG ] Adding 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1'
+[ DEBUG ] Adding 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1'
+[ DEBUG ] Adding 'Data 11.suite H.Test H1'
+[ DEBUG ] Adding 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1'
+[ DEBUG ] Adding 'Data 11.suite A.Test A1'
+[ DEBUG ] Adding 'Data 11.suite A.Test A2'
+[ DEBUG ] Adding 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1'
+[ INFO ] 7 tests would have been chosen. List of test: ['Data 11.Subsuite B.Subsubsuite D.suite O.Test O1', 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1', 'Data 11.suite H.Test H1', 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1', 'Data 11.suite A.Test A1', 'Data 11.suite A.Test A2', 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1']
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Started suite: 'Data 11.suite A'
+[ DEBUG ] Finishing suite: 'Data 11.suite A'
+[ DEBUG ] Started suite: 'Data 11.Subsuite A'
+[ DEBUG ] Started suite: 'Data 11.Subsuite A.Subsubsuite A'
+[ DEBUG ] Started suite: 'Data 11.Subsuite A.Subsubsuite A.suite B'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite A.Subsubsuite A.suite B'
+[ DEBUG ] Started suite: 'Data 11.Subsuite A.Subsubsuite A.suite C'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite A.Subsubsuite A.suite C'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite A.Subsubsuite A'
+[ DEBUG ] Started suite: 'Data 11.Subsuite A.suite D'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite A.suite D'
+[ DEBUG ] Started suite: 'Data 11.Subsuite A.Subsubsuite B'
+[ DEBUG ] Started suite: 'Data 11.Subsuite A.Subsubsuite B.suite E'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite A.Subsubsuite B.suite E'
+[ DEBUG ] Started suite: 'Data 11.Subsuite A.Subsubsuite B.suite F'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite A.Subsubsuite B.suite F'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite A.Subsubsuite B'
+[ DEBUG ] Started suite: 'Data 11.Subsuite A.suite G'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite A.suite G'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite A'
+[ DEBUG ] Started suite: 'Data 11.suite H'
+[ DEBUG ] Finishing suite: 'Data 11.suite H'
+[ DEBUG ] Started suite: 'Data 11.suite I'
+[ DEBUG ] Finishing suite: 'Data 11.suite I'
+[ DEBUG ] Started suite: 'Data 11.Subsuite B'
+[ DEBUG ] Started suite: 'Data 11.Subsuite B.suite J'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite B.suite J'
+[ DEBUG ] Started suite: 'Data 11.Subsuite B.Subsubsuite C'
+[ DEBUG ] Started suite: 'Data 11.Subsuite B.Subsubsuite C.suite K'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite B.Subsubsuite C.suite K'
+[ DEBUG ] Started suite: 'Data 11.Subsuite B.Subsubsuite C.suite L'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite B.Subsubsuite C.suite L'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite B.Subsubsuite C'
+[ DEBUG ] Started suite: 'Data 11.Subsuite B.suite M'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite B.suite M'
+[ DEBUG ] Started suite: 'Data 11.Subsuite B.Subsubsuite D'
+[ DEBUG ] Started suite: 'Data 11.Subsuite B.Subsubsuite D.suite N'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite B.Subsubsuite D.suite N'
+[ DEBUG ] Started suite: 'Data 11.Subsuite B.Subsubsuite D.suite O'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite B.Subsubsuite D.suite O'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite B.Subsubsuite D'
+[ DEBUG ] Finishing suite: 'Data 11.Subsuite B'
+[ DEBUG ] Started suite: 'Data 11.suite P'
+[ DEBUG ] Finishing suite: 'Data 11.suite P'
+[ DEBUG ] Finishing suite: 'Data 11'

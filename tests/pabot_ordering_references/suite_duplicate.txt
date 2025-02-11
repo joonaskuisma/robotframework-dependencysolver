@@ -1,0 +1,2 @@
+--test Data 6.suiteD.TestD1
+--test Data 6.suiteD.TestD2

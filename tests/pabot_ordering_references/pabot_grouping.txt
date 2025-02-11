@@ -1,0 +1,19 @@
+--test Data 8.suiteB.TestB2
+--test Data 8.suiteB.TestB6
+{
+--test Data 8.suiteA.TestA0
+--test Data 8.suiteA.TestA1
+--test Data 8.suiteA.TestA2
+--test Data 8.suiteA.TestA3 #DEPENDS Data 8.suiteA.TestA1 #DEPENDS Data 8.suiteA.TestA2
+--test Data 8.suiteA.TestA4 #DEPENDS Data 8.suiteA.TestA0
+--test Data 8.suiteB.TestB1
+--test Data 8.suiteB.TestB5 #DEPENDS Data 8.suiteB.TestB1 #DEPENDS Data 8.suiteA.TestA2 #DEPENDS Data 8.suiteA.TestA0
+}
+{
+--test Data 8.suiteA.TestA5
+--test Data 8.suiteA.TestA6 #DEPENDS Data 8.suiteA.TestA5
+}
+{
+--test Data 8.suiteB.TestB3
+--test Data 8.suiteB.TestB4 #DEPENDS Data 8.suiteB.TestB3
+}

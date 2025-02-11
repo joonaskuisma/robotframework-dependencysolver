@@ -1,0 +1,10 @@
+{
+--test Data 1.suiteA.TestA1
+--test Data 1.suiteA.TestA2 #DEPENDS Data 1.suiteA.TestA1
+--test Data 1.suiteA.TestA3 #DEPENDS Data 1.suiteA.TestA2
+--test Data 1.suiteA.TestA4 #DEPENDS Data 1.suiteA.TestA2
+--test Data 1.suiteA.TestA5 #DEPENDS Data 1.suiteA.TestA3 #DEPENDS Data 1.suiteA.TestA4
+--test Data 1.suiteB.TestB1 #DEPENDS Data 1.suiteA.TestA5
+--test Data 1.suiteB.TestB2 #DEPENDS Data 1.suiteB.TestB1
+--test Data 1.suiteB.TestB3 #DEPENDS Data 1.suiteB.TestB2
+}
