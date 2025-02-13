@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11", "3.12", "3.13"]
-        robotframework-version: ["6.0.2", "6.1.1", "7.0.1", "7.1.1"]
+        python-version: ["3.8", "3.11", "3.12", "3.13"]
+        robotframework-version: ["7.0.1", "7.1.1", "7.2.2"]
       #pabot-version: ["4.1"]
       #dependencylib-version: ["4.0"]
     steps:
@@ -51,14 +51,15 @@ jobs:
         run: pip install -e .[dev]
 
       - name: Run tests with pytest
-        run: pytest --cov=DependencySolver tests/
+        run: pytest tests/
+      #run: pytest --cov=DependencySolver tests/
 
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: pytest-test-results
-          path: coverage.xml
+      #- name: Upload test results
+      #  uses: actions/upload-artifact@v4
+      #  if: always()
+      #  with:
+      #    name: pytest-test-results
+      #    path: coverage.xml
       - run: echo "🍏 Test job's status is ${{ job.status }}."
 
   release:
