@@ -1,21 +1,21 @@
 [build-system]
 requires = [
   "setuptools>=61.0",
-  "robotframework>=7.0.0"]
+  "robotframework>=6.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "robotframework-dependencysolver"
 dynamic = ["version"]
 dependencies = [
-  "robotframework>=7.0.0",
-  "robotframework-dependencylibrary>=4.0.0",
+  "robotframework>=6.0",
+  "robotframework-dependencylibrary>=4.0",
 ]
 requires-python = ">=3.8"
 authors = [
   { name="Joonas Kuisma", email="kuisma.joonas@gmail.com" },
 ]
-description="Defining interdependent test cases and managing test execution."
+description="A Robot Framework prerunmodifier for interdependent test cases execution."
 readme = "README.md"
 license = {file = "LICENSE"}
 
@@ -29,6 +29,16 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "robotframework-pabot>=4.1",
+]
+pabot = [
+    "robotframework-pabot>=4.1",
 ]
 
 [project.scripts]
