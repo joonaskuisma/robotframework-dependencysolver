@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["^3.11", "^3.12", "^3.13"]
-        robotframework-version: ["^6.0", "^7.0"]
-        pabot-version: ["^4.1"]
-        dependencylib-version: ["^4.0"]
+        python-version: ["3.11", "3.12", "3.13"]
+        robotframework-version: ["6.0.2", "6.1.1", "7.0.1", "7.1.1"]
+      #pabot-version: ["4.1"]
+      #dependencylib-version: ["4.0"]
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -42,10 +42,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest coverage
           pip install "robotframework==${{ matrix.robotframework-version }}"
-          pip install "robotframework-pabot==${{ matrix.pabot-version }}"
-          pip install "robotframework-dependencylibrary==${{ matrix.dependencylib-version }}"
+        #pip install pytest coverage
+        #pip install "robotframework-pabot==${{ matrix.pabot-version }}"
+        #pip install "robotframework-dependencylibrary==${{ matrix.dependencylib-version }}"
+      
+      - name: Install package
+        run: pip install -e .[dev]
 
       - name: Run tests with pytest
         run: pytest --cov=DependencySolver tests/
