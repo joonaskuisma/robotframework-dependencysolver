@@ -2,6 +2,7 @@
 """Robot Framework pre-run modifier. See DESCRIPTION or use as 'depsol --help' to see help."""
 
 import logging.handlers
+import robot
 from robot.api import ExecutionResult
 from robot.api import SuiteVisitor, ResultVisitor
 from robot.model import TestCase, TestSuite, TagPatterns, Tags, namepatterns
@@ -10,6 +11,23 @@ from robot.utils import Matcher, MultiMatcher  # Use this in next version
 from ._version import __version__
 
 import argparse, os
+
+#TODO:
+# Add 6.0 robot support
+
+rf_version = tuple(map(int, robot.__version__.split(".")))
+
+if rf_version >= (7, 0):
+    suite_name_attr = "full_name"
+else:
+    suite_name_attr = "longname"
+
+
+def get_suite_name(suite):
+    return getattr(suite, suite_name_attr, "Unknown")
+
+def get_test_name(suite):
+    return getattr(suite, suite_name_attr, "Unknown")
 
 
 os.system('color')
@@ -248,11 +266,11 @@ class ReRunTests(ResultVisitor):
 
     def visit_test(self, test: TestCase):
         if test.status == 'FAIL':
-            self.failed_tests.append(test.full_name)
+            self.failed_tests.append(get_test_name(test))
         if test.status == 'SKIP':
-            self.skipped_tests.append(test.full_name)
+            self.skipped_tests.append(get_test_name(test))
         if test.status == 'PASS':
-            self.passed_tests.append(test.full_name)
+            self.passed_tests.append(get_test_name(test))
         return super().visit_test(test)
 
     def end_result(self, result):
