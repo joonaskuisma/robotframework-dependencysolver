@@ -1,17 +1,17 @@
 [build-system]
 requires = [
   "setuptools>=61.0",
-  "robotframework>=6.0"]
+  "robotframework>=7.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "robotframework-dependencysolver"
 dynamic = ["version"]
 dependencies = [
-  "robotframework>=6.0",
+  "robotframework>=7.0",
   "robotframework-dependencylibrary>=4.0",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 authors = [
   { name="Joonas Kuisma", email="kuisma.joonas@gmail.com" },
 ]
