@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11", "3.12", "3.13"]
-        robotframework-version: ["6.x", "7.x"]
-        pabot-version: ["4.1"]
-        dependencylib-version: ["4.x"]
+        python-version: ["^3.11", "^3.12", "^3.13"]
+        robotframework-version: ["^6.0", "^7.0"]
+        pabot-version: ["^4.1"]
+        dependencylib-version: ["^4.0"]
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -56,7 +56,7 @@ jobs:
         with:
           name: pytest-test-results
           path: coverage.xml
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - run: echo "🍏 Test job's status is ${{ job.status }}."
 
   release:
     name: Build and Release
@@ -92,3 +92,4 @@ jobs:
       #    TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
       #    TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       #  run: twine upload dist/*
+      - run: echo "🍏 Release job's status is ${{ job.status }}."
