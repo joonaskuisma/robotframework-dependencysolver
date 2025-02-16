@@ -1,5 +1,17 @@
 # robotframework-dependencysolver
 A Robot Framework prerunmodifier for interdependent test cases execution.
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Versioning](#versioning)
+- [Installation](#installation)
+- [How define dependencies with DependencyLibrary](#how-define-dependencies-with-dependencylibrary)
+- [Using DependencySolver](#using-dependencysolver)
+- [Using with Pabot](#using-with-pabot)
+- [Contributing](#contributing)
+
+## Introduction
  
 Ideally tests are independent, but when tests depend on earlier tests,
 [DependencyLibrary](https://github.com/mentalisttraceur/robotframework-dependencylibrary) makes it easy to explicitly declare these dependencies
@@ -32,7 +44,15 @@ specification](https://semver.org/spec/v2.0.0.html).
 pip install robotframework-dependencysolver
 ```
 
-You can verify a successful installation with the following command:
+This will install the latest version of **robotframework-dependencysolver**, along with latest (or sufficiently recent if already installed) versions of **robotframework** and **robotframework-dependencylibrary**.
+
+Additionally, if you are using the **pabot** library, you can ensure that you have a sufficiently recent version of **robotframework-pabot** by running:
+
+```sh
+pip install robotframework-dependencysolver[pabot]
+```
+
+After desired installation command, you can verify a successful installation with the following command:
 
 ```cmd
 depsol --version
@@ -258,6 +278,10 @@ like this:
 {
 --test Suite.Test A
 --test Suite.Test B #DEPENDS Suite.Test A
---test Suite.Test C #DEPENDS Suite.Test C
+--test Suite.Test C #DEPENDS Suite.Test B
 }
 ```
+
+## Contributing
+
+If you want to contribute to the project, request a new feature or change to existing functionality, or if you find a bug, you can open an issue on [GitHub](https://github.com/joonaskuisma/robotframework-dependencysolver/issues)
