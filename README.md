@@ -1,5 +1,7 @@
 # robotframework-dependencysolver
-A Robot Framework prerunmodifier for interdependent test cases execution.
+
+![PyPI - Version](https://img.shields.io/pypi/v/robotframework-dependencysolver)
+[![PyPI Downloads](https://static.pepy.tech/badge/robotframework-dependencysolver)](https://pepy.tech/projects/robotframework-dependencysolver)
 
 ## Table of Contents
 
@@ -12,7 +14,9 @@ A Robot Framework prerunmodifier for interdependent test cases execution.
 - [Contributing](#contributing)
 
 ## Introduction
- 
+
+A Robot Framework prerunmodifier for interdependent test cases execution.
+
 Ideally tests are independent, but when tests depend on earlier tests,
 [DependencyLibrary](https://github.com/mentalisttraceur/robotframework-dependencylibrary) makes it easy to explicitly declare these dependencies
 and have tests that depend on each other do the right thing.
@@ -40,6 +44,8 @@ specification](https://semver.org/spec/v2.0.0.html).
 
 ## Installation
 
+If you already have [Python](https://www.python.org/) with [pip](https://pip.pypa.io/en/stable/) installed, you can simply run:
+
 ```cmd
 pip install robotframework-dependencysolver
 ```
@@ -48,7 +54,7 @@ This will install the latest version of **robotframework-dependencysolver**, alo
 
 Additionally, if you are using the **pabot** library, you can ensure that you have a sufficiently recent version of **robotframework-pabot** by running:
 
-```sh
+```cmd
 pip install robotframework-dependencysolver[pabot]
 ```
 
@@ -266,7 +272,7 @@ Once the appropriate version is installed, using Pabot is quite
 straightforward. The simplest command is:
 
 ```cmd
-pabot --pabotprerunmodifier DependencySolver.depsol:-i:tagC --ordering depsol.pabot.txt <other_commands_to_pabot> <path_to_your_test_folder>
+pabot --testlevelsplit --pabotprerunmodifier DependencySolver.depsol:-i:tagC --ordering depsol.pabot.txt <other_commands_to_pabot> <path_to_your_test_folder>
 ```
 
 However, note that since the example tests A, B, and C depend on each other, 
