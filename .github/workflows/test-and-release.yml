@@ -106,13 +106,13 @@ jobs:
         run: twine upload dist/*
 
       - name: Verify package on PyPI
-        run: pip install --no-cache-dir my-package==$(echo ${{ github.ref_name }} | sed 's/^v//')
+        run: pip install --no-cache-dir robotframework-dependencysolver==$(echo ${{ github.ref_name }} | sed 's/^v//')
 
-      - name: Test PyPI package
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install my-package==${{ github.ref_name }}
-          pytest --pyargs my_package
+      #- name: Test PyPI package  # This needs at lease some tests to be part of the package
+      #  run: |
+      #    python -m venv venv
+      #    source venv/bin/activate
+      #    pip install robotframework-dependencysolver==${{ github.ref_name }}
+      #    pytest --pyargs robotframework-dependencysolver
 
       - run: echo "🍏 Release job's status is ${{ job.status }}."
