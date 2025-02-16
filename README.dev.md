@@ -1,5 +1,21 @@
 # Developer Guide
 
+## Installation
+
+Clone this repository by using command:
+
+```cmd
+git clone https://github.com/joonaskuisma/robotframework-dependencysolver.git
+```
+
+and then run:
+
+```cmd
+pip install -e .[dev]
+```
+
+Then you have editable development environment ready with pabot and pytest.
+
 ## Commit Message Guidelines (Conventional Commits)
 To maintain a clear and structured commit history, we follow the **Conventional Commits** standard. 
 Each commit message should be prefixed with a specific type that describes the change:
@@ -48,14 +64,15 @@ Releases are triggered by **tagging a commit** in Git.
 
 ### How to Create a Release
 1. Ensure all changes are merged into `main`.
-2. Use [Semantic Versioning](https://semver.org/) (e.g., `v1.0.0`).
-4. Remember update version number to 'src/DependencySolver/_version.py'
-5. Tag the latest commit:
+2. Remember update version number to 'src/DependencySolver/_version.py'
+Use commit message: "Bump version to X.Y.Z". Use [Semantic Versioning](https://semver.org/) (e.g., `vX.Y.Z`).
+3. Ensure all changes are merged into `main` again with `git log --oneline` and `git status`.
+4. Tag the latest commit:
    ```sh
-   git tag v1.0.0
-   git push origin v1.0.0
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
    ```
-6. The GitHub Actions workflow will:
+5. The GitHub Actions workflow will:
    - Run tests.
    - Build and publish the package to **PyPI**.
    - Generate **automatic release notes**.

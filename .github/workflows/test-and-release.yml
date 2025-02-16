@@ -106,7 +106,7 @@ jobs:
         run: twine upload dist/*
 
       - name: Verify package on PyPI
-        run: pip install --no-cache-dir my-package==${{ github.ref_name }}
+        run: pip install --no-cache-dir my-package==$(echo ${{ github.ref_name }} | sed 's/^v//')
 
       - name: Test PyPI package
         run: |
@@ -114,5 +114,5 @@ jobs:
           source venv/bin/activate
           pip install my-package==${{ github.ref_name }}
           pytest --pyargs my_package
-          
+
       - run: echo "🍏 Release job's status is ${{ job.status }}."
