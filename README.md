@@ -290,4 +290,6 @@ like this:
 
 ## Contributing
 
-If you want to contribute to the project, request a new feature or change to existing functionality, or if you find a bug, you can open an issue on [GitHub](https://github.com/joonaskuisma/robotframework-dependencysolver/issues)
+If you would like to request a new feature or modification to existing functionality, or report a bug, you can open an issue on [GitHub](https://github.com/joonaskuisma/robotframework-dependencysolver/issues). For any issues, please create a bug report and reference the version in question. 
+
+If you want to contribute and participate in the project, please read the [Developer Guide](README.dev.md) file first.

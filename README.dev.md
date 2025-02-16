@@ -1,0 +1,58 @@
+# Developer Guide
+
+## Commit Message Guidelines (Conventional Commits)
+To maintain a clear and structured commit history, we follow the **Conventional Commits** standard. 
+Each commit message should be prefixed with a specific type that describes the change:
+
+| Type      | Purpose                                              | Example |
+|-----------|------------------------------------------------------|---------|
+| feat      | Adds a new feature                                  | `feat: Add dark mode support` |
+| fix       | Fixes a bug                                         | `fix: Resolve crash on login` |
+| chore     | Updates tools or dependencies (no code changes)    | `chore: Update dependencies` |
+| docs      | Documentation updates                              | `docs: Update README with API usage` |
+| style     | Code formatting, no logic changes                  | `style: Format code with Black` |
+| refactor  | Code restructuring without functional changes      | `refactor: Simplify authentication logic` |
+| test      | Adds or updates tests                              | `test: Add unit tests for user service` |
+| perf      | Performance improvements                          | `perf: Optimize image loading` |
+| ci        | CI/CD configuration changes                       | `ci: Update GitHub Actions workflow` |
+| build     | Changes to the build system or dependencies       | `build: Upgrade setuptools version` |
+
+### Commenting Best Practices
+- Use **descriptive comments** in the code to explain non-trivial logic.
+- Prefer **inline comments** (`#`) for single lines.
+- Use **docstrings** (`""" ... """`) for functions and modules.
+
+## Pull Request (PR) Guidelines
+1. Create a **feature branch** from `main`.
+2. Use **Conventional Commits** for clear commit messages.
+3. When submitting a PR:
+   - Provide a **clear description** of the change.
+   - Reference related **issues** using GitHub syntax:
+     - `Fixes #123` (Closes the issue automatically when merged)
+     - `Resolves #456` or `Addresses #789`
+   - Request a review from at least **one team member**.
+4. Ensure all tests pass before merging.
+5. Use **draft PRs** for work-in-progress changes.
+
+## Release Process
+Releases are triggered by **tagging a commit** in Git.
+
+### How to Create a Release
+1. Ensure all changes are merged into `main`.
+2. Use [Semantic Versioning](https://semver.org/) (e.g., `v1.0.0`).
+4. Remember update version number to 'src/DependencySolver/_version.py'
+5. Tag the latest commit:
+   ```sh
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+6. The GitHub Actions workflow will:
+   - Run tests.
+   - Build and publish the package to **PyPI**.
+   - Generate **automatic release notes**.
+   - Verifies that latest package is in **PyPI** and run tests again.
+
+For any issues, create a **bug report** in GitHub Issues and reference the problematic version.
+
+---
+By following these guidelines, we ensure a smooth development workflow and maintain high-quality releases. 🚀
