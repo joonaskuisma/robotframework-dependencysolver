@@ -17,6 +17,15 @@ Each commit message should be prefixed with a specific type that describes the c
 | ci        | CI/CD configuration changes                       | `ci: Update GitHub Actions workflow` |
 | build     | Changes to the build system or dependencies       | `build: Upgrade setuptools version` |
 
+Remember to add ! if the commit change is not backward compatible.
+For example: `feat!: Added new required parameters.` or use BREAKING CHANGE in commit message:
+
+```
+feat: Change authentication system
+
+BREAKING CHANGE: User passwords are no longer stored, only OAuth2 tokens are used.
+```
+
 ### Commenting Best Practices
 - Use **descriptive comments** in the code to explain non-trivial logic.
 - Prefer **inline comments** (`#`) for single lines.
