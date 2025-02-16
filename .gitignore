@@ -1,11 +1,13 @@
 venv/
-.venv/
+.venv*/
 env/
 *log.html
 *output.xml
 *report.html
 depsol.pabot.txt
 depsol.log
+.pabotsuitenames
+pabot_results/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

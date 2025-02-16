@@ -19,7 +19,7 @@ description="A Robot Framework prerunmodifier for interdependent test cases exec
 readme = "README.md"
 license = {file = "LICENSE"}
 
-keywords = ["Robot Framework", "DependencySolver", "prerunmodifier"]
+keywords = ["robotframework", "dependencysolver", "dependencylibrary", "prerunmodifier, testautomation"]
 classifiers = [
     #"Development Status :: 5 - Production/Stable",
     "Development Status :: 4 - Beta",
@@ -47,6 +47,7 @@ depsol = "DependencySolver.run:main"
 [project.urls]
 Homepage = "https://github.com/joonaskuisma/robotframework-dependencysolver"
 Issues = "https://github.com/joonaskuisma/robotframework-dependencysolver/issues"
+Download = "https://pypi.org/project/robotframework-dependencysolver/"
 
 [tool.setuptools.dynamic]
 version = {attr = "DependencySolver._version.__version__"}
