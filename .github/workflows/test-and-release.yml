@@ -87,9 +87,12 @@ jobs:
       - name: Build package
         run: python -m build
 
-      - name: Upload release assets to GitHub
+      - name: Upload release assets to GitHub with auto changelog
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          generate_release_notes: true
           files: |
             dist/*.tar.gz
             dist/*.whl
@@ -101,4 +104,15 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: twine upload dist/*
+
+      - name: Verify package on PyPI
+        run: pip install --no-cache-dir my-package==${{ github.ref_name }}
+
+      - name: Test PyPI package
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install my-package==${{ github.ref_name }}
+          pytest --pyargs my_package
+          
       - run: echo "🍏 Release job's status is ${{ job.status }}."
