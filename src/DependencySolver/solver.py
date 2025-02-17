@@ -9,6 +9,7 @@ from robot.api import ExecutionResult, SuiteVisitor, ResultVisitor
 from robot.model import TestCase, TestSuite, TagPatterns
 from robot.utils import Matcher
 from ._version import __version__
+from .sort_ordering import sort_by_output_xml
 
 #TODO:
 # Add 6.0 robot support
@@ -768,7 +769,12 @@ class DependencySolver(SuiteVisitor):
 
         self._define_groups()
 
-        for g in self.groups:
+        if self.args.pabot == 'OPTIMIZED':
+            sorted_groups = sort_by_output_xml(self.groups, inpath=self.args.src_file or 'output.xml')
+        else:
+            sorted_groups = self.groups
+
+        for g in sorted_groups:
             group_text, group_end_text = "", ""
             if len(self.groups[g]) > 1:
                 group_text = "{\n"
@@ -776,7 +782,7 @@ class DependencySolver(SuiteVisitor):
             for tc in ordered_list:
                 if tc in self.groups[g]:
                     test = f"--test {tc}"
-                    if self.args.pabot == 'FULL':
+                    if self.args.pabot in ['FULL', 'OPTIMIZED']:
                         for s in self.test_cases[tc].solved_test_dependencies:
                             test += f" #DEPENDS {s}"
                     group_text += test + "\n"
