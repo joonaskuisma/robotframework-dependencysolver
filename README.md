@@ -1,6 +1,6 @@
 # robotframework-dependencysolver
 
-![PyPI - Version](https://img.shields.io/pypi/v/robotframework-dependencysolver)
+[![PyPI - Version](https://img.shields.io/pypi/v/robotframework-dependencysolver)](https://pypi.org/project/robotframework-dependencysolver/)
 [![PyPI Downloads](https://static.pepy.tech/badge/robotframework-dependencysolver)](https://pepy.tech/projects/robotframework-dependencysolver)
 
 ## Table of Contents
@@ -15,23 +15,23 @@
 
 ## Introduction
 
-A Robot Framework prerunmodifier for interdependent test cases execution.
+A [Robot Framework](https://robotframework.org/) prerunmodifier for interdependent test cases execution.
 
 Ideally tests are independent, but when tests depend on earlier tests,
 [DependencyLibrary](https://github.com/mentalisttraceur/robotframework-dependencylibrary) makes it easy to explicitly declare these dependencies
 and have tests that depend on each other do the right thing.
 
-The `DependencyLibrary` provides two [Robot Framework](https://robotframework.org/) keywords: `Depends On Test`
+The **DependencyLibrary** provides two Robot Framework keywords: `Depends On Test`
 and `Depends On Suite` for defining dependencies between tests and suites. 
 
-`DependencySolver` is a pre-run modifier for [Robot Framework](https://robotframework.org/), designed to 
+This **DependencySolver** is a pre-run modifier for Robot Framework, designed to 
 execute dependent test chains. For instance, if Test C depends on Test B, 
 and Test B in turn depends on Test A, then all three tests must be run to 
 ensure Test C can execute successfully. However, if you run Robot Framework with
 the command `robot -t 'test C' <path_to_your_test_folder>`, Test C will fail 
 because this command does not select Tests B and A.
 
-For more details on using the `DependencySolver`, please refer to the section 
+For more details on using the **DependencySolver**, please refer to the section 
 [Using DependencySolver](##using-dependencysolver).
 
 If you want to run tests parallel with [Pabot](https://pabot.org/), please 
