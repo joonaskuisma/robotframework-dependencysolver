@@ -64,8 +64,9 @@ Releases are triggered by **tagging a commit** in Git.
 
 ### How to Create a Release
 1. Ensure all changes are merged into `main`.
-2. Remember to update version number to 'src/DependencySolver/_version.py' and add to release_notes.md
-Use commit message: "Bump version to X.Y.Z". Use [Semantic Versioning](https://semver.org/) (e.g., `vX.Y.Z`).
+2. Remember to update version number to `src/DependencySolver/_version.py` and add to `release_notes.md`.
+
+Use commit message: "Bump version to X.Y.Z" and [Semantic Versioning](https://semver.org/) (e.g., `vX.Y.Z`).
 3. Ensure all changes are merged into `main` again with `git log --oneline` and `git status`.
 4. Tag the latest commit:
    ```sh

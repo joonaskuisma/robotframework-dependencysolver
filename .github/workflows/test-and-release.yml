@@ -85,7 +85,9 @@ jobs:
           cat release_notes.md >> final_release_notes.md
           echo "" >> final_release_notes.md
           echo "### 🔄 Commit Changes Since Last Version:" >> final_release_notes.md
-          git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s (%an)" >> final_release_notes.md
+          PREV_TAG=$(git describe --tags --abbrev=0 --match "v*" $(git rev-list --tags --skip=1 --max-count=1))
+          if [ -z "$PREV_TAG" ]; then PREV_TAG=$(git rev-list --max-parents=0 HEAD); fi
+          git log $PREV_TAG..HEAD --pretty=format:"- %s (%an)" >> final_release_notes.md
           echo "" >> final_release_notes.md
           echo "### 📝 Additional Notes" >> final_release_notes.md
           echo "- 📌 See the full **changelog**: [CHANGELOG.md](https://github.com/joonaskuisma/robotframework-dependencysolver/CHANGELOG.md)" >> final_release_notes.md
@@ -102,7 +104,9 @@ jobs:
           cat release_notes.md >> new_changelog.md
           echo "" >> new_changelog.md
           echo "### 🔄 Commit Changes Since Last Version:" >> new_changelog.md
-          git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s (%an)" >> new_changelog.md
+          PREV_TAG=$(git describe --tags --abbrev=0 --match "v*" $(git rev-list --tags --skip=1 --max-count=1))
+          if [ -z "$PREV_TAG" ]; then PREV_TAG=$(git rev-list --max-parents=0 HEAD); fi
+          git log $PREV_TAG..HEAD --pretty=format:"- %s (%an)" >> new_changelog.md
           echo "" >> new_changelog.md
           cat CHANGELOG.md >> new_changelog.md
           mv new_changelog.md CHANGELOG.md
@@ -111,6 +115,12 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Checkout main branch to avoid detached HEAD issue
+          git fetch origin main
+          git checkout main
+
+          # Check for changes and commit if necessary
           git diff --quiet || (git add CHANGELOG.md && git commit -m "📜 Updated CHANGELOG for ${{ github.ref_name }}" && git push)
 
       - name: Set up Python
@@ -151,8 +161,7 @@ jobs:
           VERSION=$(echo ${{ github.ref_name }} | sed 's/^v//')
           sleep 5
           for i in {1..10}; do
-            if curl --silent --fail "https://pypi.org/pypi/$PACKAGE_NAME/$VERSION/json" > /dev/null || \
-              wget -q --spider "https://pypi.org/pypi/$PACKAGE_NAME/$VERSION/json"; then
+            if curl --silent --fail "https://pypi.org/pypi/$PACKAGE_NAME/$VERSION/json" > /dev/null; then
               echo "Package $PACKAGE_NAME@$VERSION is available on PyPI!"
               exit 0
             fi
