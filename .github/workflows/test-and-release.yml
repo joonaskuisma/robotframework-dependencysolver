@@ -95,34 +95,6 @@ jobs:
           echo "" >> final_release_notes.md
           echo "Thanks to all contributors for making this release possible! 🎉🚀" >> final_release_notes.md
 
-      - name: Generate Changelog
-        run: |
-          echo "## [${{ github.ref_name }}] - $(date +'%Y-%m-%d')" > new_changelog.md
-          echo "" >> new_changelog.md
-          echo "### 📜 Official Release Notes" >> new_changelog.md
-          echo "" >> new_changelog.md
-          cat release_notes.md >> new_changelog.md
-          echo "" >> new_changelog.md
-          echo "### 🔄 Commit Changes Since Last Version:" >> new_changelog.md
-          PREV_TAG=$(git describe --tags --abbrev=0 --match "v*" $(git rev-list --tags --skip=1 --max-count=1))
-          if [ -z "$PREV_TAG" ]; then PREV_TAG=$(git rev-list --max-parents=0 HEAD); fi
-          git log $PREV_TAG..HEAD --pretty=format:"- %s (%an)" >> new_changelog.md
-          echo "" >> new_changelog.md
-          cat CHANGELOG.md >> new_changelog.md
-          mv new_changelog.md CHANGELOG.md
-  
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Checkout main branch to avoid detached HEAD issue
-          git fetch origin main
-          git checkout main
-
-          # Check for changes and commit if necessary
-          git diff --quiet || (git add CHANGELOG.md && git commit -m "📜 Updated CHANGELOG for ${{ github.ref_name }}" && git push)
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
