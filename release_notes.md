@@ -2,5 +2,3 @@
 
 ### 📈 Improvements
 - 🚀 Add automatic CHANGELOG and release_notes in CI.
-
----

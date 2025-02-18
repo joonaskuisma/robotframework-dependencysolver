@@ -19,5 +19,3 @@
 ### 📦 Dependencies Updated
 - 🔄 Upgraded `dependency_name` from vX.Y to vX.Z.
 - ⚙️ Security patches applied to [package/library].
-
----
