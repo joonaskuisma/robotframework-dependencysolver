@@ -20,8 +20,4 @@
 - 🔄 Upgraded `dependency_name` from vX.Y to vX.Z.
 - ⚙️ Security patches applied to [package/library].
 
-### 📝 Additional Notes
-- 📌 See the full **changelog**: [CHANGELOG.md](https://github.com/joonaskuisma/robotframework-dependencysolver/CHANGELOG.md)
-- 📢 Report issues or feedback at: [Issues](https://github.com/joonaskuisma/robotframework-dependencysolver/issues)
-
 ---
