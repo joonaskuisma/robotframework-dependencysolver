@@ -87,6 +87,10 @@ jobs:
           echo "### 🔄 Commit Changes Since Last Version:" >> final_release_notes.md
           git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s (%an)" >> final_release_notes.md
           echo "" >> final_release_notes.md
+          echo "### 📝 Additional Notes" >> final_release_notes.md
+          echo "- 📌 See the full **changelog**: [CHANGELOG.md](https://github.com/joonaskuisma/robotframework-dependencysolver/CHANGELOG.md)" >> final_release_notes.md
+          echo "- 📢 Report issues or feedback at: [Issues](https://github.com/joonaskuisma/robotframework-dependencysolver/issues)" >> final_release_notes.md
+          echo "" >> final_release_notes.md
           echo "Thanks to all contributors for making this release possible! 🎉🚀" >> final_release_notes.md
 
       - name: Generate Changelog
