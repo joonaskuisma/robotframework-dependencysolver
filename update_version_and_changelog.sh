@@ -22,9 +22,7 @@ else
 fi
 
 # 3. Generate the new CHANGELOG.md
-echo "## [${NEW_VERSION}] - $(date +'%Y-%m-%d')" > new_changelog.md
-echo "" >> new_changelog.md
-echo "### 📜 Official Release Notes" >> new_changelog.md
+echo "# [${NEW_VERSION}] - $(date +'%Y-%m-%d')" > new_changelog.md
 echo "" >> new_changelog.md
 cat release_notes.md >> new_changelog.md
 echo "" >> new_changelog.md
@@ -57,8 +55,8 @@ mv new_changelog.md CHANGELOG.md
 echo "✅ Updated CHANGELOG.md"
 
 # 5. Commit and push the changes (Uncomment and use if needed)
-# git add CHANGELOG.md "$VERSION_FILE"
-# git commit -m "📜 Updated CHANGELOG and version $NEW_VERSION"
+# git add CHANGELOG.md "$VERSION_FILE" release_notes.md
+# git commit -m "Updated CHANGELOG and version $NEW_VERSION"
 # git push origin main
 
 # 6. Add the new tag and push it to GitHub (Uncomment and use if needed)

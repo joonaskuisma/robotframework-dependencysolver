@@ -11,7 +11,7 @@ on:
       - main
 
 permissions:
-  contents: write 
+  contents: write
 
 jobs:
   test:
@@ -27,7 +27,7 @@ jobs:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      
+ 
       - name: Checkout repository
         uses: actions/checkout@v4
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
@@ -49,7 +49,7 @@ jobs:
         #pip install pytest coverage
         #pip install "robotframework-pabot==${{ matrix.pabot-version }}"
         #pip install "robotframework-dependencylibrary==${{ matrix.dependencylib-version }}"
-      
+
       - name: Install package
         run: pip install -e .[dev]
 
@@ -80,17 +80,10 @@ jobs:
           echo "" >> final_release_notes.md
           echo "🔧 Release created by **${{ github.actor }}**" >> final_release_notes.md
           echo "" >> final_release_notes.md
-          echo "## 📜 Official Release Notes" >> final_release_notes.md
-          echo "" >> final_release_notes.md
           cat release_notes.md >> final_release_notes.md
           echo "" >> final_release_notes.md
-          echo "### 🔄 Commit Changes Since Last Version:" >> final_release_notes.md
-          PREV_TAG=$(git describe --tags --abbrev=0 --match "v*" $(git rev-list --tags --skip=1 --max-count=1))
-          if [ -z "$PREV_TAG" ]; then PREV_TAG=$(git rev-list --max-parents=0 HEAD); fi
-          git log $PREV_TAG..HEAD --pretty=format:"- %s (%an)" >> final_release_notes.md
-          echo "" >> final_release_notes.md
           echo "### 📝 Additional Notes" >> final_release_notes.md
-          echo "- 📌 See the full **changelog**: [CHANGELOG.md](https://github.com/joonaskuisma/robotframework-dependencysolver/CHANGELOG.md)" >> final_release_notes.md
+          echo "- 📌 See the full **changelog**: [CHANGELOG.md](https://github.com/joonaskuisma/robotframework-dependencysolver/blob/main/CHANGELOG.md)" >> final_release_notes.md
           echo "- 📢 Report issues or feedback at: [Issues](https://github.com/joonaskuisma/robotframework-dependencysolver/issues)" >> final_release_notes.md
           echo "" >> final_release_notes.md
           echo "Thanks to all contributors for making this release possible! 🎉🚀" >> final_release_notes.md
@@ -108,7 +101,7 @@ jobs:
       - name: Build package
         run: python -m build
 
-      - name: Upload release assets to GitHub with auto changelog
+      - name: Upload release assets to GitHub
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
@@ -119,7 +112,7 @@ jobs:
             dist/*.tar.gz
             dist/*.whl
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish package to PyPI
         env:
@@ -142,15 +135,5 @@ jobs:
           done
           echo "Package did not become available in time" >&2
           exit 1
-
-      - name: Verify package on PyPI
-        run: pip install --no-cache-dir robotframework-dependencysolver==$(echo ${{ github.ref_name }} | sed 's/^v//')
-
-      #- name: Test PyPI package  # This needs at lease some tests to be part of the package
-      #  run: |
-      #    python -m venv venv
-      #    source venv/bin/activate
-      #    pip install robotframework-dependencysolver==${{ github.ref_name }}
-      #    pytest --pyargs robotframework-dependencysolver
 
       - run: echo "🍏 Release job's status is ${{ job.status }}."
