@@ -53,14 +53,5 @@ fi
 mv new_changelog.md CHANGELOG.md
 
 echo "✅ Updated CHANGELOG.md"
-
-# 5. Commit and push the changes (Uncomment and use if needed)
-# git add CHANGELOG.md "$VERSION_FILE" release_notes.md
-# git commit -m "Updated CHANGELOG and version $NEW_VERSION"
-# git push origin main
-
-# 6. Add the new tag and push it to GitHub (Uncomment and use if needed)
-# git tag "$NEW_VERSION"
-# git push origin "$NEW_VERSION"
-
-# echo "🚀 Released new version: $NEW_VERSION"
+echo "Check that ${VERSION_FILE}, CHANGELOG.md and release_notes.md look OK"
+echo "Then to make release run: ./release.sh 
