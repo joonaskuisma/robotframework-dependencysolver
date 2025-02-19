@@ -60,24 +60,19 @@ BREAKING CHANGE: User passwords are no longer stored, only OAuth2 tokens are use
 5. Use **draft PRs** for work-in-progress changes.
 
 ## Release Process
-Releases are triggered by **tagging a commit** in Git.
+Releases are triggered by **tagging a commit** in Git. This can be done with scripts.
 
 ### How to Create a Release
 1. Ensure all changes are merged into `main`.
-2. Remember to update version number to `src/DependencySolver/_version.py` and add to `release_notes.md`.
-
-Use commit message: "Bump version to X.Y.Z" and [Semantic Versioning](https://semver.org/) (e.g., `vX.Y.Z`).
-3. Ensure all changes are merged into `main` again with `git log --oneline` and `git status`.
-4. Tag the latest commit:
-   ```sh
-   git tag vX.Y.Z
-   git push origin vX.Y.Z
-   ```
-5. The GitHub Actions workflow will:
+2. Then write and save `release_notes.md`. Use `release_notes_template.md` format.
+3. Run `./update_version_and_changelog.sh`
+4. Check that `src/DependencySolver/_version.py`, `CHANGELOG.md` and `release_notes.md` look OK. Use git `git status` to check that only these three files are modified. 
+5. Run `./release.sh`. This will make commit and add correct tag and then push them to GitHub.
+6. Then the GitHub Actions workflow will:
    - Run tests.
    - Build and publish the package to **PyPI**.
    - Generate **automatic release notes**.
-   - Verifies that latest package is in **PyPI** and run tests again.
+   - Verifies that latest package is in **PyPI**.
 
 For any issues, create a **bug report** in GitHub Issues and reference the problematic version.
 
