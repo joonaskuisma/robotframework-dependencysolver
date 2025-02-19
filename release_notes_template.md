@@ -1,4 +1,4 @@
-## 🚀 Release Notes – Version X.Y.Z
+## 🚀 Release Notes
 
 ### 🔥 What's New?
 - ✨ Feature 1: Brief description of the new feature.
