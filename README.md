@@ -32,7 +32,7 @@ the command `robot -t 'test C' <path_to_your_test_folder>`, Test C will fail
 because this command does not select Tests B and A.
 
 For more details on using the **DependencySolver**, please refer to the section 
-[Using DependencySolver](##using-dependencysolver).
+[Using DependencySolver](#using-dependencysolver).
 
 If you want to run tests parallel with [Pabot](https://pabot.org/), please 
 refer to section [Using With Pabot](#using-with-pabot).
