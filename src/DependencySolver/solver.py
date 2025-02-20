@@ -181,7 +181,7 @@ class DependencyArgumentParser(argparse.ArgumentParser):
         solver_options.add_argument('--src_file', action='store', type=argparse.FileType('r', encoding='utf-8'), help=HELP_SCR_FILE)
         solver_options.add_argument('-p', '--pabot', default='FULL', choices=['NONE', 'GROUP', 'FULL', 'OPTIMIZED'], help=HELP_PABOT)
         
-        self.add_argument('--version', action='version', version=f'Running {repr(PROG_CALL)} from robotframework-dependencylibrary {__version__}')
+        self.add_argument('--version', action='version', version=f'Running {repr(NAME)} from robotframework-dependencylibrary {__version__}')
 
 
 class CustomFormatter(argparse.RawTextHelpFormatter):
