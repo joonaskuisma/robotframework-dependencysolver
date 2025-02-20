@@ -1,4 +1,9 @@
-## 🚀 Release Notes – Version 0.3.1
+## 🚀 Release Notes
+
+### 🐞 Bug Fixes
+- Fixed broken link in README.md
+- Fixed --version output print
 
 ### 📈 Improvements
-- 🚀 Add automatic CHANGELOG and release_notes in CI.
+- Documentation updates
+- Improvent CI and release process

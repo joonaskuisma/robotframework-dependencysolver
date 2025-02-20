@@ -1,3 +1,25 @@
+# [v0.3.2] - 2025-02-20
+
+## 🚀 Release Notes
+
+### 🐞 Bug Fixes
+- Fixed broken link in README.md
+- Fixed --version output print
+
+### 📈 Improvements
+- Documentation updates
+- Improvent CI and release process
+
+### 🔄 Commit Changes Since Last Version (v0.3.1):
+- ci: update_version_and_changelog typo fix (Joonas Kuisma)
+- docs: Fix --version output print (Joonas Kuisma)
+- ci: Update update_version_and_changelog script (Joonas Kuisma)
+- docs: Update README.dev.md (Joonas Kuisma)
+- ci: Update and add release scripts (Joonas Kuisma)
+- ci: Update Github workflow and shell script (Joonas Kuisma)
+- docs: Update release_notes_template (Joonas Kuisma)
+- docs: Fix broken link in README (Joonas Kuisma)
+
 ## [v0.3.1] - 2025-02-18
 
 ### 📜 Official Release Notes
