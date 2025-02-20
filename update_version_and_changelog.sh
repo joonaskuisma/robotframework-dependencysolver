@@ -6,12 +6,12 @@ set -e  # Exit on error
 VERSION_FILE="src/DependencySolver/_version.py"
 
 # 2. Read the current version from the file
-CURRENT_VERSION=$(grep -oE "v[0-9]+\.[0-9]+\.[0-9]+" "$VERSION_FILE" | head -n 1)
+CURRENT_VERSION=$(grep -oE "[0-9]+\.[0-9]+\.[0-9]+" "$VERSION_FILE" | head -n 1)
 
-echo "Current version: $CURRENT_VERSION"
+echo "Current version: v$CURRENT_VERSION"
 
 # 3. Prompt the user for the new version number
-read -p "Enter the new version (e.g., ${CURRENT_VERSION}): " NEW_VERSION
+read -p "Enter the new version (e.g., v${CURRENT_VERSION}): " NEW_VERSION
 
 # 4. Validate version format (vX.Y.Z where X, Y, and Z are numbers)
 if [[ ! "$NEW_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
