@@ -56,4 +56,4 @@ mv new_changelog.md CHANGELOG.md
 
 echo "✅ Updated CHANGELOG.md"
 echo "Check that ${VERSION_FILE}, CHANGELOG.md and release_notes.md look OK"
-echo "Then to make release run: ./release.sh 
+echo "Then to make release run: ./release.sh"
