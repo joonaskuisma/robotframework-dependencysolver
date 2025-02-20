@@ -2,17 +2,22 @@
 
 set -e  # Exit on error
 
-# 1. Prompt the user for the new version number
-read -p "Enter the new version (e.g., v1.2.3): " NEW_VERSION
+# 1. Define the version file
+VERSION_FILE="src/DependencySolver/_version.py"
 
-# 2. Validate version format (vX.Y.Z where X, Y, and Z are numbers)
+# 2. Read the current version from the file
+CURRENT_VERSION=$(grep -oE "v[0-9]+\.[0-9]+\.[0-9]+" "$VERSION_FILE" | head -n 1)
+
+echo "Current version: $CURRENT_VERSION"
+
+# 3. Prompt the user for the new version number
+read -p "Enter the new version (e.g., ${CURRENT_VERSION}): " NEW_VERSION
+
+# 4. Validate version format (vX.Y.Z where X, Y, and Z are numbers)
 if [[ ! "$NEW_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "❌ Error: Invalid version format. Use the format vX.Y.Z (e.g., v1.2.3)."
     exit 1
 fi
-
-# 3. Update the version in _version.py file
-VERSION_FILE="src/DependencySolver/_version.py"
 
 if [[ -f "$VERSION_FILE" ]]; then
     # Replace the old version number with the new one
@@ -23,13 +28,13 @@ else
     exit 1
 fi
 
-# 4. Generate the new CHANGELOG.md
+# 5. Generate the new CHANGELOG.md
 echo "# [${NEW_VERSION}] - $(date +'%Y-%m-%d')" > new_changelog.md
 echo "" >> new_changelog.md
 cat release_notes.md >> new_changelog.md
 echo "" >> new_changelog.md
 
-# 5. Find the most recent previous tag (before the new version)
+# 6. Find the most recent previous tag (before the new version)
 PREV_TAG=$(git tag -l "v*" | sort -V | tail -n 1)
 
 if [[ -z "$PREV_TAG" ]]; then
@@ -42,7 +47,7 @@ git log $PREV_TAG..HEAD --pretty=format:"- %s (%an)" >> new_changelog.md
 echo "" >> new_changelog.md
 echo "" >> new_changelog.md
 
-# 6. Check if CHANGELOG.md exists
+# 7. Check if CHANGELOG.md exists
 if [[ -f "CHANGELOG.md" ]]; then
     echo "✅ Found existing CHANGELOG.md, appending new content."
 
