@@ -226,26 +226,23 @@ by using `DependencySolver` as `prerunmodifier` you could run whole dependency
 chain C -> B -> A by command:
 
 ```cmd
-robot --prerunmodifier DependencySolver.depsol:-t:"Test C" <other_robot_commands> <path_to_your_test_folder>
+robot --prerunmodifier DependencySolver.depsol:-t:"Test C" <other_robot_commands> <your_test_folder>
 ```
 
 Additionally, you could use tags also (but only static, not dynamic tags):
 ```cmd
-robot --prerunmodifier DependencySolver.depsol:-i:tagC <other_robot_commands> <path_to_your_test_folder>
+robot --prerunmodifier DependencySolver.depsol:-i:tagC <other_robot_commands> <your_test_folder>
 ```
 
 You can also use shortcut `depsol` directly. This actually calls `robot` with
-`--prerunmodifier`, but it is propably more useful when you do not have any 
-(or at least not many) `<other_robot_commands>`. If you have already navigated 
-to `<path_to_your_test_folder>`, you does not need to give `--folder` option, 
-because default is current directory:
+`--prerunmodifier`.
 
 ```cmd
-depsol -t "test C"
+depsol -t "test C" <other_robot_commands> <your_test_folder>
 ```
 Or
 ```cmd
-depsol -i "tagC"
+depsol -i "tagC" <other_robot_commands> <your_test_folder>
 ```
 These commands will have the same effect as the two commands mentioned above.
 
@@ -272,7 +269,11 @@ Once the appropriate version is installed, using Pabot is quite
 straightforward. The simplest command is:
 
 ```cmd
-pabot --testlevelsplit --pabotprerunmodifier DependencySolver.depsol:-i:tagC --ordering depsol.pabot.txt <other_commands_to_pabot> <path_to_your_test_folder>
+pabot --testlevelsplit --pabotprerunmodifier DependencySolver.depsol:-i:tagC --ordering depsol.pabot.txt <other_pabot_commands> <your_test_folder>
+```
+Or you can use command:
+```cmd
+depsol --tool pabot -i tagC <other_pabot_commands> <your_test_folder>
 ```
 
 However, note that since the example tests A, B, and C depend on each other, 
