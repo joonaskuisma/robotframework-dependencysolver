@@ -5,6 +5,7 @@ import argparse
 import logging
 import os
 import robot
+import time
 from robot.api import ExecutionResult, SuiteVisitor, ResultVisitor
 from robot.model import TestCase, TestSuite, TagPatterns
 from robot.utils import Matcher
@@ -37,14 +38,15 @@ PROG_NAME = f"{NAME}.{PROG_CALL}"
 
 DESCRIPTION = f"""Robot Framework pre-run modifier which is used to execute dependent test chains.
 
-For example, if test C depends on test B, which in turn depends on A, you must run all three tests if you want to run test C successfully. 
-If you run the command 'robot -t C <your test folder>', test fails because this command not select test B and A.
+For example, if test C depends on test B, which in turn depends on A, you must run all three tests if you want to run 
+test C successfully. If you run the command 'robot -t C <your test folder>', test fails because this command not select 
+test B and A.
 
 Usage:
 
-The idea is that you should use the 'robotframework-dependencylibrary' and define the dependencies of each test in the [Setup] section by using 'Depends On Test' Keyword. 
-You could use this keyword multiple times using Build-in 'Run Keywords' at first.
-Then this prerunmodifier checks all test setup parts and solve dependencies before running tests.
+The idea is that you should use the 'robotframework-dependencylibrary' and define the dependencies of each test in the 
+[Setup] section by using 'Depends On Test' Keyword. You could use this keyword multiple times using Build-in 
+'Run Keywords' at first. Then this prerunmodifier checks all test setup parts and solve dependencies before running tests.
 
 Write test setup as follows:
 ========
@@ -69,7 +71,8 @@ test C
 
 ========
 
-You could also use 'Depends On Test' and 'Depends On Suite' keywords in default setup with 'Test Setup' keyword or in 'Suite Setup':
+You could also use 'Depends On Test' and 'Depends On Suite' keywords in default setup with 'Test Setup' keyword 
+or in 'Suite Setup':
 ========
 
 *** Settings ***
@@ -89,19 +92,22 @@ For example, `--test first --test third` selects test cases with name `first` an
 Examples
 ========
 
-# When you have written test dependencies in [Setup] sections like above, then by using this as prerunmodifier you could run whole dependency chain C -> B -> A by using command:
+# When you have written test dependencies in [Setup] sections like above, then by using this as prerunmodifier you could 
+# run whole dependency chain C -> B -> A by using command:
 $ robot --prerunmodifier {PROG_NAME}:-t:"test C" <other_robot_commands> <your_test_folder>
 
-# You can also use shortcut '{PROG_CALL}'. This actually calls 'robot' with --prerunmodifier, but it is propably more useful when you do not have any or at least many <other_robot_commands>:
-$ {PROG_CALL} -t "test C" -f <your_test_folder>
-
-# If you have already navigated to <your_test_folder>, you does not need to give -f option, because default is current directory:
-$ {PROG_CALL} -t "test C"
+# You can also use shortcut '{PROG_CALL}'. This actually calls 'robot' with --prerunmodifier like above:
+$ {PROG_CALL} -t "test C" <other_robot_commands> <your_test_folder>
 
 # Additionally, you could use tags also (but only static, not dynamic tags):
 $ robot --prerunmodifier {PROG_NAME}:-i:tagC <other_robot_commands> <your_test_folder>
 # Or:
-$ {PROG_CALL} -i "tagC"
+$ {PROG_CALL} -i tagC <other_robot_commands> <your_test_folder>
+
+# If you want to run tests parallel with pabot, you could use command:
+$ pabot --testlevelsplit --pabotprerunmodifier DependencySolver.depsol:-i:tagC --ordering depsol.pabot.txt <other_pabot_commands> <your_test_folder>
+# Or:
+$ {PROG_CALL} -i tagC --tool pabot <other_pabot_commands> <your_test_folder>
 
 ========
 """
@@ -118,34 +124,55 @@ To avoid this, please use the correct help call:
 """
 # These are copied from "robot --help" commands, so check that working as expected!
 HELP_TEST = """Select tests by name or by long name containing also parent suite name like `Parent.Test`.
-Name is case and space insensitive and it can also be a simple pattern where `*` matches anything, `?` matches any single character, and `[chars]` matches one character in brackets."""
-HELP_INCLUDE = """Select tests by tag. Similarly as name with --test, tag is case and space insensitive and it is possible to use patterns with `*`, `?` and `[]` as wildcards.
-Tags and patterns can also be combined together with `AND`, `OR`, and `NOT` operators.
+Name is case and space insensitive and it can also be a simple pattern where `*` matches anything, `?` matches any 
+single character, and `[chars]` matches one character in brackets.
+"""
+HELP_INCLUDE = """Select tests by tag. Similarly as name with --test, tag is case and space insensitive and it is possible to use patterns 
+with `*`, `?` and `[]` as wildcards. Tags and patterns can also be combined together with `AND`, `OR`, and `NOT` operators.
 Examples: --include foo --include bar*
-          --include fooANDbar*"""
+          --include fooANDbar*
+"""
 HELP_EXCLUDE = """Select test cases not to run by tag. These tests are not run even if included with --include. 
-However, they will run if they are needed because some other test dependency chain. So this --exclude is like 'soft' version of exclude when compared to --exclude_explicit option.
-Tags are matched using same rules as with --include."""
-HELP_EXCLUDE_EXPLICIT = """Select test cases not to run by tag. These tests are not run in any circumstances. This may block some other desired tests to run. 
-For example, if B depends on A and -ee A and -i B is given, neither of tests will not run. So this --exclude_explicit is like 'hard' version of exclude'. Tags are matched using same rules as with --include."""
-HELP_SUITE = """Select suites by name. When this option is used with --test, --include or --exclude, only tests in matching suites and also matching other filtering criteria are selected.
-Name can be a simple pattern similarly as with --test and it can contain parent name separated with a dot.
-For example, `-s X.Y` selects suite `Y` only if its parent is `X`."""
+However, they will run if they are needed because some other test dependency chain. So this --exclude is like 'soft' 
+version of exclude when compared to --exclude_explicit option. Tags are matched using same rules as with --include.
+"""
+HELP_EXCLUDE_EXPLICIT = """Select test cases not to run by tag. These tests are not run in any circumstances. This may block some other desired 
+tests to run. For example, if B depends on A and -ee A and -i B is given, neither of tests will not run. 
+So this --exclude_explicit is like 'hard' version of exclude'. Tags are matched using same rules as with --include.
+"""
+HELP_SUITE = """Select suites by name. When this option is used with --test, --include or --exclude, only tests in matching suites and 
+also matching other filtering criteria are selected. Name can be a simple pattern similarly as with --test and it can 
+contain parent name separated with a dot. For example, `-s X.Y` selects suite `Y` only if its parent is `X`.
+"""
 HELP_REVERSE = """Option prints all tests that depend on the given test case.
-Does not perform any tests, but is used to check which other tests may be affected by the change of the given test case."""
-HELP_DEBUG = """If given, prevents the actual execution of the tests. Used for debugging this prerunmodifier."""
-HELP_RERUN = """Reads robot output from the '--src_file' and selects all tests that ended up in fail or skip status and the dependencies they need to be executed again. If given, does not care -t, -s, -i, -e or -ee options."""
-HELP_SCR_FILE = """The name of the file from which the output of the 'robot' command is read. By default, the robot's default file 'output.xml' in current directory is used."""
+Does not perform any tests, but is used to check which other tests may be affected by the change of the given test case.
+"""
+HELP_DEBUG = """If given, prevents the actual execution of the tests. Used for debugging this prerunmodifier.
+"""
+HELP_RERUN = """Reads robot output from the '--src_file' and selects all tests that ended up in fail or skip status and the dependencies 
+they need to be executed again. If given, does not care -t, -s, -i, -e or -ee options.
+"""
+HELP_SCR_FILE = """The name of the file from which the output of the 'robot' command is read. 
+By default, the robot's default file 'output.xml' in current directory is used.
+"""
 #HELP_DEST_FILE = """TODO: ADD DESCRIPTION"""
-HELP_LOGLEVEL = """Defines the log level to be saved in file RunRobotWithDependencies.log. Default is DEBUG. NOTE: The new run overwrites the log in the same way as when executing the 'robot' command."""
-HELP_CONSOLE_LOGLEVEL = """Defines the log level to be printed to console. Default is INFO."""
-HELP_WITHOUT_TIMESTAMPS = """If given, omits timestamps from the saved log. Mainly used in the script's own tests."""
+HELP_FILE_LOGLEVEL = """Defines the log level to be saved in file RunRobotWithDependencies.log. Default is DEBUG. 
+NOTE: The new run overwrites the log in the same way as when executing the 'robot' command.
+"""
+HELP_CONSOLE_LOGLEVEL = """Defines the log level to be printed to console. Default is INFO.
+"""
+HELP_WITHOUT_TIMESTAMPS = """If given, omits timestamps from the saved log. Mainly used in the script's own tests.
+"""
 HELP_PABOT = f"""Controls the {PROG_CALL}.pabot.txt file needed to run 'pabot'. Default is FULL.
-If NONE, file is not created. This can speed up DependencySolver a bit when running with 'robot'. Note that previous {PROG_CALL}.pabot.txt file is not deleted.
+If NONE, file is not created. This can speed up DependencySolver a bit when running with 'robot'.
+Note that previous {PROG_CALL}.pabot.txt file is not deleted.
 If GROUP, groups the order of execution, but omits the dependencies when compared to FULL.
 If FULL, groups the order of execution and dependencies.
-If OPTIMIZED, like FULL but in addition, attempt to read the durations and statuses of test executions from '--src_file' and then organize individual tests and groups in the ordering file
-so that execution starts with failed or skipped tests or groups containing such tests, followed by the slowest to the fastest. If 'output.xml' does not contain the execution time of a test, the test is considered skipped."""
+If OPTIMIZED, like FULL but in addition, attempt to read the durations and statuses of test executions from '--src_file' 
+and then organize individual tests and groups in the ordering file so that execution starts with failed or skipped tests 
+or groups containing such tests, followed by the slowest to the fastest. If 'output.xml' does not contain the execution 
+time of a test, the test is considered skipped.
+"""
 
 
 def print_prog_name():
@@ -156,10 +183,14 @@ def print_prog_name():
 
 class DependencyArgumentParser(argparse.ArgumentParser):
     def add_arguments(self) -> None:
+
+        def uppercase_type(value: str) -> str:
+            return value.upper()
+        
         options = self.add_argument_group(
             'robot-like options',
             'These options are used like after \'robot\' command but they can work slightly differently.\n'
-            'Note that the \'--test\', \'--suite\', \'--include\' and \'--exclude\' options define only the desired tests, '
+            'Note that the \'--test\', \'--suite\', \'--include\' and \'--exclude\' options define only the desired tests,\n'
             'but the final run also includes test cases according to dependency chains, which do not necessarily meet the conditions.'
         )
         options.add_argument('-t', '--test', action='append', help=HELP_TEST, metavar='name *')
@@ -167,23 +198,27 @@ class DependencyArgumentParser(argparse.ArgumentParser):
         options.add_argument('-i', '--include', action='append', help=HELP_INCLUDE, metavar='tag *')
         options.add_argument('-e', '--exclude', action='append', help=HELP_EXCLUDE, metavar='tag *')
         options.add_argument('-ee', '--exclude_explicit', action='append', help=HELP_EXCLUDE_EXPLICIT, metavar='tag *')
-        options.add_argument('-r', '--rerun', action='store_true', help=HELP_RERUN)
+        options.add_argument('--rerun', action='store_true', help=HELP_RERUN)
 
         solver_options = self.add_argument_group(
             f'{PROG_NAME} options',
             f'These options are used by \'{PROG_NAME}\''
         )
-        solver_options.add_argument('-rv', '--reverse', action='store_true', help=HELP_REVERSE)
-        solver_options.add_argument('-d', '--debug', action='store_true', help=HELP_DEBUG)
+        solver_options.add_argument('--reverse', action='store_true', help=HELP_REVERSE)
+        solver_options.add_argument('--debug', action='store_true', help=HELP_DEBUG)
         solver_options.add_argument('--without_timestamps', action='store_true', help=HELP_WITHOUT_TIMESTAMPS)
-        solver_options.add_argument('-l', '--loglevel', default='debug', choices=['ERROR', 'WARNING', 'INFO', 'DEBUG'], help=HELP_LOGLEVEL)
-        solver_options.add_argument('-cl', '--consoleloglevel', default='info', choices=['ERROR', 'WARNING', 'INFO', 'DEBUG'], help=HELP_CONSOLE_LOGLEVEL)
+        solver_options.add_argument('--fileloglevel', default='DEBUG', type=uppercase_type, choices=['ERROR', 'WARNING', 'INFO', 'DEBUG'], help=HELP_FILE_LOGLEVEL)
+        solver_options.add_argument('--consoleloglevel', default='INFO', type=uppercase_type, choices=['ERROR', 'WARNING', 'INFO', 'DEBUG'], help=HELP_CONSOLE_LOGLEVEL)
         solver_options.add_argument('--src_file', action='store', type=argparse.FileType('r', encoding='utf-8'), help=HELP_SCR_FILE)
-        solver_options.add_argument('-p', '--pabot', default='FULL', choices=['NONE', 'GROUP', 'FULL', 'OPTIMIZED'], help=HELP_PABOT)
+        solver_options.add_argument('--pabotlevel', default='FULL', type=uppercase_type, choices=['NONE', 'GROUP', 'FULL', 'OPTIMIZED'], help=HELP_PABOT)
         
         self.add_argument('--version', action='version', version=f'Running {repr(NAME)} from robotframework-dependencylibrary {__version__}')
 
+    def _parse_known_args(self, args=None, namespace=None):
+        args, unknown = super()._parse_known_args(args, namespace)
+        return args, unknown
 
+    
 class CustomFormatter(argparse.RawTextHelpFormatter):
     def _format_action_invocation(self, action):
         if not action.option_strings:
@@ -301,13 +336,14 @@ class DependencySolver(SuiteVisitor):
         self.parser.add_arguments()
         self.args = self.parser.parse_args(args=options)
         print_prog_name()
+        self.start_time = time.time()
         self.logger = self._setup_logger()
         self.logger.info("The following arguments were obtained: " + repr(options))
 
         self.error_occurs = False
         self.check_done = False
-        self.test_cases = {}
-        self.suites = {}
+        self.test_cases = {}  # test.full:name : DependencyTestCase
+        self.suites = {}  # suite.full_name : TestSuite
         self.possible_loop = {}
         self.relation_chains = {}
         self.list_of_running_tests_names = []
@@ -338,7 +374,7 @@ class DependencySolver(SuiteVisitor):
             format = '[ %(levelname)s ] %(message)s'
         logging.basicConfig(
             handlers=[logging.FileHandler(filename=f'{PROG_CALL}.log', mode='w', encoding='utf-8')],
-            level=self.args.loglevel.upper(),
+            level=self.args.fileloglevel.upper(),
             format=format
         )
         stream_logger = logging.StreamHandler()
@@ -385,10 +421,10 @@ class DependencySolver(SuiteVisitor):
                     if loop_check_mode:
                         message = f"Dependencies are cyclical! Test case {repr(t_name)} is already part of the relation chain: {repr(relation_chain.values())}"
                         raise RecursionError(message)
-                    self.logger.info(f"In test case {repr(t_name)} either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.")
-                    self.logger.info("Starting in loop check mode.")
+                    self.logger.debug(f"In test case {repr(t_name)} either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.")
+                    self.logger.debug("Starting in loop check mode.")
                     self.possible_loop = self._solve_dependencies(t_name, relation_chain={}, loop_check_mode=True)
-                    self.logger.info("It was a merge, so let's exit loop check mode:")
+                    self.logger.debug("It was a merge, so let's exit loop check mode:")
                     self.safe_values.extend(self.possible_loop.values())
                     self.logger.debug(f"These tests are already check as loop safe: {repr(self.safe_values)}")
             else:
@@ -436,7 +472,7 @@ class DependencySolver(SuiteVisitor):
         return TestDependency(test_dependencies, suite_dependencies)
     
 
-    def _find_suites(self, suite: TestSuite, suite_setup_dependencies: list = None):
+    def _find_suites(self, suite: TestSuite, suite_setup_dependencies: list[str] = None) -> None:
         """Recursively searches the entire folder structure, i.e. all sub-suites and tests."""
         if suite_setup_dependencies is None:
             suite_setup_dependencies = []
@@ -464,7 +500,7 @@ class DependencySolver(SuiteVisitor):
         self.check_done = True
 
 
-    def _find_tests(self, suite: TestSuite, suite_setup_dependencies: list = None):
+    def _find_tests(self, suite: TestSuite, suite_setup_dependencies: list[str] = None) -> None:
         """Searches for all tests in the given suite. Then creates DependencyTestCase objects."""
         if suite_setup_dependencies is None:
             suite_setup_dependencies = []
@@ -499,9 +535,9 @@ class DependencySolver(SuiteVisitor):
             )
 
 
-    def _check_one_relation_chain(self, test_name: str):
+    def _check_one_relation_chain(self, test_name: str) -> None:
         """Takes one test name as argument and adds whole relation chain starting from this test to self.list_of_running_tests_names, but only if test names are not there already."""
-        self.logger.info(f"Checking relation chain for test {repr(test_name)}")
+        self.logger.debug(f"Checking relation chain for test {repr(test_name)}")
 
         self.relation_chains[test_name] = []
         if test_name in self.test_cases:
@@ -530,27 +566,29 @@ class DependencySolver(SuiteVisitor):
             raise NameError(message)
 
 
-    def _check_tag(self, tag: str, option=None):
+    def _check_tag(self, tag: str, option='include') -> list[str]:
         """Finds all test cases which have 'tag' in [Tags] section."""
         tag_found = False
+        output = []
         for t in self.test_cases.values():
             if TagPatterns(tag).match(t.tags):
                 tag_found = True
                 if option == 'include':
-                    self.tc_by_include.append(t.full_name)
+                    #self.tc_by_include.append(t.full_name)
                     self.logger.debug(f'Requested test {repr(t.full_name)} because of --include option: {repr(tag)}')
                 elif option == 'exclude':
-                    self.tc_by_exclude.append(t.full_name)
+                    #self.tc_by_exclude.append(t.full_name)
                     self.logger.debug(f'Not requested test {repr(t.full_name)} because of --exclude option: {repr(tag)}')
                 elif option == 'exclude_explicit':
-                    self.tc_by_exclude_explicit.append(t.full_name)
+                    #self.tc_by_exclude_explicit.append(t.full_name)
                     self.logger.debug(f'Not requested test {repr(t.full_name)} in any case, because of --exclude_explicit option: {repr(tag)}')
-
+                output.append(t.full_name)
         if not tag_found and option == 'include':
             self.logger.warning(f'Given tag: {repr(tag)} not found from any tests. Check your spelling.')
+        return output
 
 
-    def _check_suite(self, suite_name: str, suite_found: bool = False):
+    def _check_suite(self, suite_name: str, suite_found: bool = False) -> None:
         long_name = '.'.join([TestSuite.name_from_source(n) for n in suite_name.split('.')])
         for s in self.suites:
             if Matcher(f'*{long_name}').match(s) or Matcher(f'*.{long_name}').match(s):
@@ -568,21 +606,24 @@ class DependencySolver(SuiteVisitor):
             raise NameError(message)
 
 
-    def _check_test(self, test_name: str):
+    def _check_test(self, test_name: str) -> list[str]:
         test_case_found = False
+        output = []
         long_name = '.'.join([TestSuite.name_from_source(n) for n in test_name.split('.')])
         self.logger.debug(f'Requested test {repr(test_name)} directly.')
         for t in self.test_cases:
             if Matcher(f'*.{long_name}').match(t) or Matcher(long_name).match(t):
-                self.tc_by_test.append(t)
+                #self.tc_by_test.append(t)
+                output.append(t)
                 test_case_found = True
 
         if not test_case_found:
             message = f"Argument: {repr(test_name)} does not match any test case."
             raise NameError(message)
+        return output
 
 
-    def _define_running_tests(self):
+    def _define_running_tests(self) -> None:
         """Contains logic that defines the tests to be executed based on the given command line arguments."""
         if self.args.suite:
             for suite in self.args.suite:
@@ -590,19 +631,19 @@ class DependencySolver(SuiteVisitor):
 
         if self.args.include:
             for tag in self.args.include:
-                self._check_tag(tag, option='include')
+                self.tc_by_include += self._check_tag(tag, option='include')
 
         if self.args.exclude:
             for tag in self.args.exclude:
-                self._check_tag(tag, option='exclude')
+                self.tc_by_exclude += self._check_tag(tag, option='exclude')
 
         if self.args.exclude_explicit:
             for tag in self.args.exclude_explicit:
-                self._check_tag(tag, option='exclude_explicit')
+                self.tc_by_exclude_explicit += self._check_tag(tag, option='exclude_explicit')
 
         if self.args.test:
             for desired_test_name in self.args.test:
-                self._check_test(desired_test_name)
+                self.tc_by_test += self._check_test(desired_test_name)
 
         desired_test_set = set()
         list_of_desired_tcs = [set(self.tc_by_suite), set(self.tc_by_test), set(self.tc_by_include)]
@@ -668,7 +709,7 @@ class DependencySolver(SuiteVisitor):
         if not self.list_of_running_tests_names:
             self.logger.warning("No tests chosen.")
 
-        if self.args.pabot != 'NONE':
+        if self.args.pabotlevel != 'NONE':
             self._write_depends_ordering()
 
         if self.args.debug:
@@ -679,7 +720,7 @@ class DependencySolver(SuiteVisitor):
             self.list_of_running_tests_names = []
 
 
-    def _define_groups(self):
+    def _define_groups(self) -> None:
         ordered_list = [t for t in self.test_cases if t in self.list_of_running_tests_names]
         initial_tests = [t for t in ordered_list if not self.test_cases[t].solved_test_dependencies]
         ending_tests = [t for t in ordered_list if not self.test_cases[t].direct_precondition_for_tests]
@@ -751,8 +792,8 @@ class DependencySolver(SuiteVisitor):
                     these_are_checked.append(e)
 
 
-    def _write_depends_ordering(self):
-        """Used for pabot to write ordering.txt file as name PROG_NAME.pabot.txt."""
+    def _write_depends_ordering(self) -> None:
+        """Used for pabot to write ordering.txt file as name depsol.pabot.txt."""
         all_text = ""
         ordered_list = [t for t in self.test_cases if t in self.list_of_running_tests_names]
         
@@ -769,7 +810,7 @@ class DependencySolver(SuiteVisitor):
 
         self._define_groups()
 
-        if self.args.pabot == 'OPTIMIZED':
+        if self.args.pabotlevel == 'OPTIMIZED':
             sorted_groups = sort_by_output_xml(self.groups, inpath=self.args.src_file or 'output.xml')
         else:
             sorted_groups = self.groups
@@ -782,7 +823,7 @@ class DependencySolver(SuiteVisitor):
             for tc in ordered_list:
                 if tc in self.groups[g]:
                     test = f"--test {tc}"
-                    if self.args.pabot in ['FULL', 'OPTIMIZED']:
+                    if self.args.pabotlevel in ['FULL', 'OPTIMIZED']:
                         for s in self.test_cases[tc].solved_test_dependencies:
                             test += f" #DEPENDS {s}"
                     group_text += test + "\n"
@@ -793,13 +834,14 @@ class DependencySolver(SuiteVisitor):
             f.write(all_text)
 
 
-    def start_suite(self, suite: TestSuite) -> bool | None:
+    def start_suite(self, suite: TestSuite) -> None:
         """When suite starts, check if it is main suite/folder. If it is, loops through all test cases and finds all relation chains.
         After then it defines which test to execute."""
         if not self.error_occurs:
             self.logger.debug(f"Started suite: {repr(suite.full_name)}")
         if not self.check_done:
             self.logger.info("Starting to explore the dependencies...")
+            self.main_suite_full_name = suite.full_name
             try:
                 self.suites[suite.full_name] = suite
                 self._find_suites(suite)
@@ -822,3 +864,5 @@ class DependencySolver(SuiteVisitor):
             self.logger.debug(f"Suite {repr(s.full_name)} will be executed.")
         if not self.error_occurs:
             self.logger.debug(f"Finishing suite: {repr(suite.full_name)}")
+        if not self.args.without_timestamps and suite.full_name == self.main_suite_full_name:
+            self.logger.info("All dependencies resolved in %s seconds." % str(time.time() - self.start_time))
