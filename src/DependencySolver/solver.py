@@ -214,8 +214,8 @@ class DependencyArgumentParser(argparse.ArgumentParser):
         
         self.add_argument('--version', action='version', version=f'Running {repr(NAME)} from robotframework-dependencylibrary {__version__}')
 
-    def _parse_known_args(self, args=None, namespace=None):
-        args, unknown = super()._parse_known_args(args, namespace)
+    def parse_known_args(self, args=None, namespace=None):
+        args, unknown = super().parse_known_args(args, namespace)
         return args, unknown
 
     
