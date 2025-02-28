@@ -70,7 +70,7 @@ def build_command():
 
 
 def main():
-    return subprocess.call(build_command())
+    subprocess.call(build_command())
 
 
 if __name__ == "__main__":
