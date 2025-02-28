@@ -1,4 +1,4 @@
-[ INFO ] The following arguments were obtained: ('--suite', 'suite O', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ INFO ] The following arguments were obtained: ('--suite', 'suite O', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
 [ DEBUG ] Started suite: 'Data 11'
 [ INFO ] Starting to explore the dependencies...
 [ DEBUG ] Investigating subsuite 'Data 11.suite A'
@@ -54,7 +54,7 @@
 [ DEBUG ] Requested test 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' because of subsuite or direct --suite option: 'suite O'
 [ DEBUG ] These are tests which user requested: ['Data 11.Subsuite B.Subsubsuite D.suite O.Test O1']
 [ INFO ] Starting relation chain checking...
-[ INFO ] Checking relation chain for test 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1'
+[ DEBUG ] Checking relation chain for test 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1'
 [ DEBUG ] Dependency: 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' -> 'Suite K'
 [ DEBUG ] Transforming suite dependency to test dependencies...
 [ DEBUG ] Transformed dependency: 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' -> 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1'
@@ -69,9 +69,9 @@
 [ DEBUG ] Transformed dependency: 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1' -> 'Data 11.suite A.Test A1'
 [ DEBUG ] Transformed dependency: 'Data 11.Subsuite A.Subsubsuite B.suite E.Test E1' -> 'Data 11.suite A.Test A2'
 [ DEBUG ] Dependency: 'Data 11.suite A.Test A2' -> 'Test A1'
-[ INFO ] In test case 'Data 11.suite A.Test A1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
-[ INFO ] Starting in loop check mode.
-[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] In test case 'Data 11.suite A.Test A1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ DEBUG ] Starting in loop check mode.
+[ DEBUG ] It was a merge, so let's exit loop check mode:
 [ DEBUG ] These tests are already check as loop safe: ['Data 11.suite A.Test A1']
 [ DEBUG ] Dependency: 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1' -> 'suite F'
 [ DEBUG ] Transforming suite dependency to test dependencies...
@@ -81,19 +81,19 @@
 [ DEBUG ] Transformed dependency: 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1' -> 'Data 11.suite A.Test A1'
 [ DEBUG ] 'Data 11.suite A.Test A1' has already been checked and does not contain a loop.
 [ DEBUG ] Transformed dependency: 'Data 11.Subsuite A.Subsubsuite B.suite F.Test F1' -> 'Data 11.suite A.Test A2'
-[ INFO ] In test case 'Data 11.suite A.Test A2' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
-[ INFO ] Starting in loop check mode.
+[ DEBUG ] In test case 'Data 11.suite A.Test A2' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ DEBUG ] Starting in loop check mode.
 [ DEBUG ] Dependency: 'Data 11.suite A.Test A2' -> 'Test A1'
-[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] It was a merge, so let's exit loop check mode:
 [ DEBUG ] These tests are already check as loop safe: ['Data 11.suite A.Test A1', 'Data 11.suite A.Test A2', 'Data 11.suite A.Test A1']
 [ DEBUG ] Dependency: 'Data 11.suite A.Test A2' -> 'Test A1'
 [ DEBUG ] 'Data 11.suite A.Test A1' has already been checked and does not contain a loop.
 [ DEBUG ] Dependency: 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' -> 'suite H'
 [ DEBUG ] Transforming suite dependency to test dependencies...
 [ DEBUG ] Transformed dependency: 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1' -> 'Data 11.suite H.Test H1'
-[ INFO ] In test case 'Data 11.suite H.Test H1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
-[ INFO ] Starting in loop check mode.
-[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] In test case 'Data 11.suite H.Test H1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ DEBUG ] Starting in loop check mode.
+[ DEBUG ] It was a merge, so let's exit loop check mode:
 [ DEBUG ] These tests are already check as loop safe: ['Data 11.suite A.Test A1', 'Data 11.suite A.Test A2', 'Data 11.suite A.Test A1', 'Data 11.suite H.Test H1']
 [ DEBUG ] Adding 'Data 11.Subsuite B.Subsubsuite D.suite O.Test O1'
 [ DEBUG ] Adding 'Data 11.Subsuite B.Subsubsuite C.suite K.Test K1'

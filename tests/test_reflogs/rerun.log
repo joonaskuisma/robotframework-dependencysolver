@@ -1,4 +1,4 @@
-[ INFO ] The following arguments were obtained: ('--include', 'ALL', '--debug', '--without_timestamps', '--rerun', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ INFO ] The following arguments were obtained: ('--include', 'ALL', '--rerun', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
 [ INFO ] Rerunner started
 [ DEBUG ] Re-running test case 'Data 7.Subsuite A.suite D.Test D1'
 [ DEBUG ] Re-running test case 'Data 7.Subsuite A.suite G.Test G1'
@@ -49,13 +49,13 @@
 [ DEBUG ] Rerun mode activated, so tests are only selected based on 'output.xml' or another given file.
 [ DEBUG ] These are tests which user requested: ['Data 7.Subsuite A.suite D.Test D1', 'Data 7.Subsuite A.suite G.Test G1', 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2']
 [ INFO ] Starting relation chain checking...
-[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.suite D.Test D1'
+[ DEBUG ] Checking relation chain for test 'Data 7.Subsuite A.suite D.Test D1'
 [ DEBUG ] Dependency: 'Data 7.Subsuite A.suite D.Test D1' -> 'Test B2'
 [ DEBUG ] Dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' -> 'Test A1'
 [ DEBUG ] 'Data 7.Subsuite A.suite D.Test D1' is already added.
 [ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' is already added.
 [ DEBUG ] Adding 'Data 7.suite A.Test A1'
-[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.suite G.Test G1'
+[ DEBUG ] Checking relation chain for test 'Data 7.Subsuite A.suite G.Test G1'
 [ DEBUG ] Dependency: 'Data 7.Subsuite A.suite G.Test G1' -> 'suite B'
 [ DEBUG ] Transforming suite dependency to test dependencies...
 [ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.suite G.Test G1' -> 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1'
@@ -64,9 +64,9 @@
 [ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'Data 7.suite A.Test A1'
 [ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'Data 7.suite A.Test A2'
 [ DEBUG ] Dependency: 'Data 7.suite A.Test A2' -> 'Test A1'
-[ INFO ] In test case 'Data 7.suite A.Test A1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
-[ INFO ] Starting in loop check mode.
-[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] In test case 'Data 7.suite A.Test A1' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ DEBUG ] Starting in loop check mode.
+[ DEBUG ] It was a merge, so let's exit loop check mode:
 [ DEBUG ] These tests are already check as loop safe: ['Data 7.suite A.Test A1']
 [ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.suite G.Test G1' -> 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2'
 [ DEBUG ] Dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' -> 'Test A1'
@@ -78,13 +78,13 @@
 [ DEBUG ] Adding 'Data 7.suite A.Test A2'
 [ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' is already added.
 [ DEBUG ] Adding 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3'
-[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2'
+[ DEBUG ] Checking relation chain for test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2'
 [ DEBUG ] Dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' -> 'Test A1'
 [ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2' is already added.
 [ DEBUG ] 'Data 7.suite A.Test A1' is already added.
-[ INFO ] Checking relation chain for test 'Data 7.suite A.Test A1'
+[ DEBUG ] Checking relation chain for test 'Data 7.suite A.Test A1'
 [ DEBUG ] 'Data 7.suite A.Test A1' is already added.
-[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1'
+[ DEBUG ] Checking relation chain for test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1'
 [ DEBUG ] Dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'suite A'
 [ DEBUG ] Transforming suite dependency to test dependencies...
 [ DEBUG ] Transformed dependency: 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' -> 'Data 7.suite A.Test A1'
@@ -94,11 +94,11 @@
 [ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1' is already added.
 [ DEBUG ] 'Data 7.suite A.Test A1' is already added.
 [ DEBUG ] 'Data 7.suite A.Test A2' is already added.
-[ INFO ] Checking relation chain for test 'Data 7.suite A.Test A2'
+[ DEBUG ] Checking relation chain for test 'Data 7.suite A.Test A2'
 [ DEBUG ] Dependency: 'Data 7.suite A.Test A2' -> 'Test A1'
 [ DEBUG ] 'Data 7.suite A.Test A2' is already added.
 [ DEBUG ] 'Data 7.suite A.Test A1' is already added.
-[ INFO ] Checking relation chain for test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3'
+[ DEBUG ] Checking relation chain for test 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3'
 [ DEBUG ] 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3' is already added.
 [ INFO ] 7 tests would have been chosen. List of test: ['Data 7.Subsuite A.suite D.Test D1', 'Data 7.Subsuite A.suite G.Test G1', 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B2', 'Data 7.suite A.Test A1', 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B1', 'Data 7.suite A.Test A2', 'Data 7.Subsuite A.Subsubsuite A.suite B.Test B3']
 [ WARNING ] DEBUG mode activated. Emptying test case list...

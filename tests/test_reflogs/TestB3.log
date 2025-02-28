@@ -1,4 +1,4 @@
-[ INFO ] The following arguments were obtained: ('--include', 'B3', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ INFO ] The following arguments were obtained: ('--include', 'B3', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
 [ DEBUG ] Started suite: 'Data 1'
 [ INFO ] Starting to explore the dependencies...
 [ DEBUG ] Investigating subsuite 'Data 1.suiteA'
@@ -6,7 +6,7 @@
 [ DEBUG ] Requested test 'Data 1.suiteB.TestB3' because of --include option: 'B3'
 [ DEBUG ] These are tests which user requested: ['Data 1.suiteB.TestB3']
 [ INFO ] Starting relation chain checking...
-[ INFO ] Checking relation chain for test 'Data 1.suiteB.TestB3'
+[ DEBUG ] Checking relation chain for test 'Data 1.suiteB.TestB3'
 [ DEBUG ] Dependency: 'Data 1.suiteB.TestB3' -> 'TestB2'
 [ DEBUG ] Dependency: 'Data 1.suiteB.TestB2' -> 'TestB1'
 [ DEBUG ] Dependency: 'Data 1.suiteB.TestB1' -> 'TestA5'
@@ -15,10 +15,10 @@
 [ DEBUG ] Dependency: 'Data 1.suiteA.TestA2' -> 'TestA1'
 [ DEBUG ] Dependency: 'Data 1.suiteA.TestA5' -> 'TestA4'
 [ DEBUG ] Dependency: 'Data 1.suiteA.TestA4' -> 'TestA2'
-[ INFO ] In test case 'Data 1.suiteA.TestA2' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
-[ INFO ] Starting in loop check mode.
+[ DEBUG ] In test case 'Data 1.suiteA.TestA2' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ DEBUG ] Starting in loop check mode.
 [ DEBUG ] Dependency: 'Data 1.suiteA.TestA2' -> 'TestA1'
-[ INFO ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] It was a merge, so let's exit loop check mode:
 [ DEBUG ] These tests are already check as loop safe: ['Data 1.suiteA.TestA2', 'Data 1.suiteA.TestA1']
 [ DEBUG ] Dependency: 'Data 1.suiteA.TestA2' -> 'TestA1'
 [ DEBUG ] 'Data 1.suiteA.TestA1' has already been checked and does not contain a loop.

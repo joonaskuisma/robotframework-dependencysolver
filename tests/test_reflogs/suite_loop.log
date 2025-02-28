@@ -1,4 +1,4 @@
-[ INFO ] The following arguments were obtained: ('--include', 'E', '--debug', '--without_timestamps', '--loglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabot', 'FULL')
+[ INFO ] The following arguments were obtained: ('--include', 'E', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
 [ DEBUG ] Started suite: 'Data 4'
 [ INFO ] Starting to explore the dependencies...
 [ DEBUG ] Investigating subsuite 'Data 4.suiteD'
@@ -7,11 +7,11 @@
 [ DEBUG ] Requested test 'Data 4.suiteE.TestE2' because of --include option: 'E'
 [ DEBUG ] These are tests which user requested: ['Data 4.suiteE.TestE1', 'Data 4.suiteE.TestE2']
 [ INFO ] Starting relation chain checking...
-[ INFO ] Checking relation chain for test 'Data 4.suiteE.TestE1'
+[ DEBUG ] Checking relation chain for test 'Data 4.suiteE.TestE1'
 [ DEBUG ] Dependency: 'Data 4.suiteE.TestE1' -> 'TestD2'
 [ DEBUG ] Adding 'Data 4.suiteE.TestE1'
 [ DEBUG ] Adding 'Data 4.suiteD.TestD2'
-[ INFO ] Checking relation chain for test 'Data 4.suiteE.TestE2'
+[ DEBUG ] Checking relation chain for test 'Data 4.suiteE.TestE2'
 [ DEBUG ] Dependency: 'Data 4.suiteE.TestE2' -> 'suiteD'
 [ DEBUG ] Transforming suite dependency to test dependencies...
 [ DEBUG ] Transformed dependency: 'Data 4.suiteE.TestE2' -> 'Data 4.suiteD.TestD1'
@@ -20,8 +20,8 @@
 [ DEBUG ] Transformed dependency: 'Data 4.suiteD.TestD1' -> 'Data 4.suiteE.TestE1'
 [ DEBUG ] Dependency: 'Data 4.suiteE.TestE1' -> 'TestD2'
 [ DEBUG ] Transformed dependency: 'Data 4.suiteD.TestD1' -> 'Data 4.suiteE.TestE2'
-[ INFO ] In test case 'Data 4.suiteE.TestE2' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
-[ INFO ] Starting in loop check mode.
+[ DEBUG ] In test case 'Data 4.suiteE.TestE2' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ DEBUG ] Starting in loop check mode.
 [ DEBUG ] Dependency: 'Data 4.suiteE.TestE2' -> 'suiteD'
 [ DEBUG ] Transforming suite dependency to test dependencies...
 [ DEBUG ] Transformed dependency: 'Data 4.suiteE.TestE2' -> 'Data 4.suiteD.TestD1'
