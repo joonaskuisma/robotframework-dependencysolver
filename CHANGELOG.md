@@ -1,3 +1,31 @@
+# [v1.0.0] - 2025-02-28
+
+## 🚀 Release Notes
+
+This is first Production/Stable release!
+
+### 🔥 What's New?
+- Added a feature to log the execution time of depsol
+
+### 📈 Improvements
+- Adjusted log levels for better clarity
+- Cleaned up --help output formatting
+- Refactored `run.py`
+- Minor improvements to implementation
+
+### ⚠️ Breaking Changes
+- Small changes to how depsol is invoked and how commands are passed to Robot
+
+### 🔄 Commit Changes Since Last Version (v0.3.2):
+- build: Changed status from beta to production/stable (Joonas Kuisma)
+- fix: trying to fix failing ci tests (Joonas Kuisma)
+- ci: fix tests (Joonas Kuisma)
+- test: Updated tests and reference logs (Joonas Kuisma)
+- docs: Updated README (Joonas Kuisma)
+- feat: Add execution time logging for depsol, adjust log levels, and improve --help output (Joonas Kuisma)
+- ci: update_version_and_changelog fix (Joonas Kuisma)
+- ci: update_version_and_changelog improvement (Joonas Kuisma)
+
 # [v0.3.2] - 2025-02-20
 
 ## 🚀 Release Notes
