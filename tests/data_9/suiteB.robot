@@ -1,5 +1,5 @@
 *** Settings ***
-Test Tags    B
+#Test Tags    B
 Test Setup    Depends On Suite    suiteA
 Library  DependencyLibrary
 

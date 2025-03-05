@@ -1,8 +1,8 @@
 *** Settings ***
 Resource    ../../resource.robot
-Test Tags    F
+#Test Tags    F
 
 *** Test Cases ***
 Test F1
-    [Tags]    F1
+    [Tags]    F1    ALL
     Log    message=test

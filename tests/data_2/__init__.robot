@@ -1,2 +1,2 @@
 *** Settings ***
-Test Tags    ALL    data_2
+#Test Tags    ALL    data_2

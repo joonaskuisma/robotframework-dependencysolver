@@ -1,5 +1,5 @@
 *** Settings ***
-Test Tags    D
+#Test Tags    D
 Library  DependencyLibrary
 
 *** Test Cases ***
