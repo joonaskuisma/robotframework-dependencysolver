@@ -17,55 +17,59 @@ rf_version = tuple(map(int, robot.__version__.split(".")))
 if rf_version >= (7, 0):
     pass
 else:
-    from typing import Sequence
-    from pathlib import Path
-    from robot.utils import seq2str
-
-    ### BEGIN MONKEYPATCH DEFS FROM ROBOT 7
+    if not hasattr(TestSuite, "name_from_source"):
+        from typing import Sequence
+        from pathlib import Path
+        from robot.utils import seq2str
     
-    #  Copyright 2008-2015 Nokia Networks
-    #  Copyright 2016-     Robot Framework Foundation
-    #
-    #  Licensed under the Apache License, Version 2.0 (the "License");
-    #  you may not use this file except in compliance with the License.
-    #  You may obtain a copy of the License at
-    #
-    #      http://www.apache.org/licenses/LICENSE-2.0
-    #
-    #  Unless required by applicable law or agreed to in writing, software
-    #  distributed under the License is distributed on an "AS IS" BASIS,
-    #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    #  See the License for the specific language governing permissions and
-    #  limitations under the License.
-    def _robot_v7_TestSuite_get_base_name(path: Path, extensions: Sequence[str]) -> str:
-        if path.is_dir():
-            return path.name
-        if not extensions:
-            return path.stem
-        if isinstance(extensions, str):
-            extensions = [extensions]
-        for ext in extensions:
-            ext = '.' + ext.lower().lstrip('.')
-            if path.name.lower().endswith(ext):
-                return path.name[:-len(ext)]
-        raise ValueError(f"File '{path}' does not have extension "
-                         f"{seq2str(extensions, lastsep=' or ')}.")
-    def _robot_v7_TestSuite_name_from_source(source: 'Path|str|None', extension: Sequence[str] = ()) -> str:
-        if not source:
-            return ''
-        if not isinstance(source, Path):
-            source = Path(source)
-        name = _robot_v7_TestSuite_get_base_name(source, extension)
-        if '__' in name:
-            name = name.split('__', 1)[1] or name
-        name = name.replace('_', ' ').strip()
-        return name.title() if name.islower() else name
-
-    ### END MONKEYPATCH DEFS FROM ROBOT 7
+        ### BEGIN MONKEYPATCH DEFS FROM ROBOT 7
+        
+        #  Copyright 2008-2015 Nokia Networks
+        #  Copyright 2016-     Robot Framework Foundation
+        #
+        #  Licensed under the Apache License, Version 2.0 (the "License");
+        #  you may not use this file except in compliance with the License.
+        #  You may obtain a copy of the License at
+        #
+        #      http://www.apache.org/licenses/LICENSE-2.0
+        #
+        #  Unless required by applicable law or agreed to in writing, software
+        #  distributed under the License is distributed on an "AS IS" BASIS,
+        #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        #  See the License for the specific language governing permissions and
+        #  limitations under the License.
+        def _robot_v7_TestSuite_get_base_name(path: Path, extensions: Sequence[str]) -> str:
+            if path.is_dir():
+                return path.name
+            if not extensions:
+                return path.stem
+            if isinstance(extensions, str):
+                extensions = [extensions]
+            for ext in extensions:
+                ext = '.' + ext.lower().lstrip('.')
+                if path.name.lower().endswith(ext):
+                    return path.name[:-len(ext)]
+            raise ValueError(f"File '{path}' does not have extension "
+                             f"{seq2str(extensions, lastsep=' or ')}.")
+        def _robot_v7_TestSuite_name_from_source(source: 'Path|str|None', extension: Sequence[str] = ()) -> str:
+            if not source:
+                return ''
+            if not isinstance(source, Path):
+                source = Path(source)
+            name = _robot_v7_TestSuite_get_base_name(source, extension)
+            if '__' in name:
+                name = name.split('__', 1)[1] or name
+            name = name.replace('_', ' ').strip()
+            return name.title() if name.islower() else name
     
-    TestSuite.name_from_source = _robot_v7_TestSuite_name_from_source
-    TestCase.full_name = property(lambda self: self.longname)
-    TestSuite.full_name = property(lambda self: self.longname)
+        ### END MONKEYPATCH DEFS FROM ROBOT 7
+        
+        TestSuite.name_from_source = _robot_v7_TestSuite_name_from_source
+
+    if not hasattr(TestCase, "full_name"):
+        TestCase.full_name = property(lambda self: self.longname)
+    if not hasattr(TestSuite, "full_name"):
+        TestSuite.full_name = property(lambda self: self.longname)
 
 # os.system('color')
 
