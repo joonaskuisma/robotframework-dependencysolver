@@ -9,6 +9,7 @@ import time
 from robot.api import ExecutionResult, SuiteVisitor, ResultVisitor
 from robot.model import TestCase, TestSuite, TagPatterns
 from robot.utils import Matcher
+from collections.abc import Iterable
 from ._version import __version__
 from .sort_ordering import sort_by_output_xml
 
@@ -24,7 +25,7 @@ def get_name(item):
     return getattr(item, name_attr, "Unknown")
 
 
-os.system('color')
+#os.system('color')
 
 PROG_CALL = "depsol"
 NAME = __name__.split(".")[0] 
@@ -350,6 +351,7 @@ class DependencySolver(SuiteVisitor):
         self.tc_by_exclude = []
         self.tc_by_exclude_explicit = []
         self.groups = {}  # key = test full name, content = [tests]
+        self.main_suite_full_name = None
 
         if self.args.rerun:
             output_file = self.args.src_file or 'output.xml'
@@ -393,9 +395,11 @@ class DependencySolver(SuiteVisitor):
             return '.'.join([self._name_from_source_legacy(n) for n in name.split('.')])
 
 
-    def _matcher(self, name: str, list_of_names: list[str]) -> list[str]:
+    def _matcher(self, name: str, list_of_names: Iterable[str]) -> list[str]:
         long_name = self._get_long_name(name)
-        return [value for value in list_of_names if Matcher(f'*.{long_name}').match(value) or Matcher(long_name).match(value)]
+        patterns = [f'*.{long_name}', long_name, name, f'*.{name}']
+
+        return [value for value in list_of_names if any(Matcher(pattern).match(value) for pattern in patterns)]
 
 
     def _solve_dependencies(self, test_name: str, relation_chain: dict, loop_check_mode: bool = False, parent: str = "") -> dict:
@@ -411,8 +415,6 @@ class DependencySolver(SuiteVisitor):
             return tests
 
         test_name_list = self._matcher(test_name, self.test_cases)
-        print("name", test_name)
-        print("cases", self.test_cases)
         if not test_name_list:
             message = f"\'Depends On Test\' keyword refers to test {repr(test_name)} that does not exist. Check your spelling."
             raise RecursionError(message)
@@ -481,8 +483,7 @@ class DependencySolver(SuiteVisitor):
         return TestDependency(test_dependencies, suite_dependencies)
     
 
-    def _find_suites(self, suite: TestSuite, suite_setup_dependencies: list[str] = None) -> None:
-        """Recursively searches the entire folder structure, i.e. all sub-suites and tests."""
+    def _find_parent_dependendencies(self, suite: TestSuite, suite_setup_dependencies: list[str] = None) -> list[str]:
         if suite_setup_dependencies is None:
             suite_setup_dependencies = []
 
@@ -491,7 +492,13 @@ class DependencySolver(SuiteVisitor):
             new_dep = self._find_dependencies(suite.setup)
             if new_dep.tests or new_dep.suites:
                 parent_dependencies.append(new_dep)
-        
+        return parent_dependencies
+
+
+    def _find_suites(self, suite: TestSuite, suite_setup_dependencies: list[str] = None) -> None:
+        """Recursively searches the entire folder structure, i.e. all sub-suites and tests."""
+        parent_dependencies = self._find_parent_dependendencies(suite, suite_setup_dependencies)
+
         for sub_suite in suite.suites:
             if get_name(sub_suite) in self.suites:
                 message = (
@@ -849,7 +856,11 @@ class DependencySolver(SuiteVisitor):
             self.main_suite_full_name = get_name(suite)
             try:
                 self.suites[get_name(suite)] = suite
-                self._find_suites(suite)
+                if len(suite.suites) > 0:
+                    self._find_suites(suite)
+                else:
+                    parent_dependencies = self._find_parent_dependendencies(suite)
+                    self._find_tests(suite, parent_dependencies)
                 self._define_running_tests()
             except (NameError, RecursionError) as err:
                 self.logger.error(f"{err.args[0]} Execution of tests cannot be started!")
