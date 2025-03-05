@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.13"]
-        robotframework-version: ["4.0.3", "7.2.2"]
+        robotframework-version: ["5.0", "7.2.2"]
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -59,7 +59,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
-        robotframework-version: ["4.0.3", "4.1.3", "5.0.1", "6.0.2", "6.1.1", "7.0.1", "7.1.1", "7.2.2"]
+        robotframework-version: ["5.0.1", "6.0.2", "6.1.1", "7.0.1", "7.1.1", "7.2.2"]
       #pabot-version: ["4.1"]
       #dependencylib-version: ["4.0"]
     steps:
