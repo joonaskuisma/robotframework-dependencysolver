@@ -1,0 +1,8 @@
+{
+--test suite A.Test A 1
+--test suite A.Test A 2 long name #DEPENDS suite A.Test A 1
+--test suite A.Test_A_3_Name #DEPENDS suite A.Test A 2 long name
+--test suite A.Test__A4 #DEPENDS suite A.Test A 2 long name
+--test suite A.TestA5 name #DEPENDS suite A.Test_A_3_Name #DEPENDS suite A.Test__A4
+--test suite A.TestA6 #DEPENDS suite A.TestA5 name
+}
