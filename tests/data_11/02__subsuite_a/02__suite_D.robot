@@ -1,6 +1,6 @@
 *** Settings ***
 Resource    ../resource.robot
-Test Tags    D
+#Test Tags    D
 
 *** Test Cases ***
 Test D1

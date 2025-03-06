@@ -1,6 +1,6 @@
 *** Settings ***
 Resource    ../../resource.robot
-Test Tags    O
+#Test Tags    O
 Test Setup    Depends On Suite    name=Suite K
 
 *** Test Cases ***

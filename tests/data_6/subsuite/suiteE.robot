@@ -1,6 +1,6 @@
 *** Settings ***
-Test Tags    G
-Library    DependencySolver
+#Test Tags    G
+Library    DependencyLibrary
 
 *** Test Cases ***
 TestG1

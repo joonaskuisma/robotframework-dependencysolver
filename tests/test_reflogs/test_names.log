@@ -1,0 +1,67 @@
+[ INFO ] The following arguments were obtained: ('--include', 'ALL', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
+[ DEBUG ] Started suite: 'suite A'
+[ INFO ] Starting to explore the dependencies...
+[ DEBUG ] Requested test 'suite A.Test A 1' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'suite A.Test A 2 long name' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'suite A.Test_A_3_Name' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'suite A.Test__A4' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'suite A.TestA5 name' because of --include option: 'ALL'
+[ DEBUG ] Requested test 'suite A.TestA6' because of --include option: 'ALL'
+[ DEBUG ] These are tests which user requested: ['suite A.Test A 1', 'suite A.Test A 2 long name', 'suite A.Test_A_3_Name', 'suite A.Test__A4', 'suite A.TestA5 name', 'suite A.TestA6']
+[ INFO ] Starting relation chain checking...
+[ DEBUG ] Checking relation chain for test 'suite A.Test A 1'
+[ DEBUG ] Adding 'suite A.Test A 1'
+[ DEBUG ] Checking relation chain for test 'suite A.Test A 2 long name'
+[ DEBUG ] Dependency: 'suite A.Test A 2 long name' -> 'Test A 1'
+[ DEBUG ] Adding 'suite A.Test A 2 long name'
+[ DEBUG ] 'suite A.Test A 1' is already added.
+[ DEBUG ] Checking relation chain for test 'suite A.Test_A_3_Name'
+[ DEBUG ] Dependency: 'suite A.Test_A_3_Name' -> 'Test A 2 long name'
+[ DEBUG ] Dependency: 'suite A.Test A 2 long name' -> 'Test A 1'
+[ DEBUG ] Adding 'suite A.Test_A_3_Name'
+[ DEBUG ] 'suite A.Test A 2 long name' is already added.
+[ DEBUG ] 'suite A.Test A 1' is already added.
+[ DEBUG ] Checking relation chain for test 'suite A.Test__A4'
+[ DEBUG ] Dependency: 'suite A.Test__A4' -> 'Test A 2 long name'
+[ DEBUG ] Dependency: 'suite A.Test A 2 long name' -> 'Test A 1'
+[ DEBUG ] Adding 'suite A.Test__A4'
+[ DEBUG ] 'suite A.Test A 2 long name' is already added.
+[ DEBUG ] 'suite A.Test A 1' is already added.
+[ DEBUG ] Checking relation chain for test 'suite A.TestA5 name'
+[ DEBUG ] Dependency: 'suite A.TestA5 name' -> 'Test_A_3_Name'
+[ DEBUG ] Dependency: 'suite A.Test_A_3_Name' -> 'Test A 2 long name'
+[ DEBUG ] Dependency: 'suite A.Test A 2 long name' -> 'Test A 1'
+[ DEBUG ] Dependency: 'suite A.TestA5 name' -> 'Test__A4'
+[ DEBUG ] Dependency: 'suite A.Test__A4' -> 'Test A 2 long name'
+[ DEBUG ] In test case 'suite A.Test A 2 long name' either the branches merge or it is a loop. Let's explore what we end up with if we start with this test.
+[ DEBUG ] Starting in loop check mode.
+[ DEBUG ] Dependency: 'suite A.Test A 2 long name' -> 'Test A 1'
+[ DEBUG ] It was a merge, so let's exit loop check mode:
+[ DEBUG ] These tests are already check as loop safe: ['suite A.Test A 2 long name', 'suite A.Test A 1']
+[ DEBUG ] Dependency: 'suite A.Test A 2 long name' -> 'Test A 1'
+[ DEBUG ] 'suite A.Test A 1' has already been checked and does not contain a loop.
+[ DEBUG ] Adding 'suite A.TestA5 name'
+[ DEBUG ] 'suite A.Test_A_3_Name' is already added.
+[ DEBUG ] 'suite A.Test A 2 long name' is already added.
+[ DEBUG ] 'suite A.Test A 1' is already added.
+[ DEBUG ] 'suite A.Test__A4' is already added.
+[ DEBUG ] Checking relation chain for test 'suite A.TestA6'
+[ DEBUG ] Dependency: 'suite A.TestA6' -> 'tESTa5 NAME'
+[ DEBUG ] Dependency: 'suite A.TestA5 name' -> 'Test_A_3_Name'
+[ DEBUG ] Dependency: 'suite A.Test_A_3_Name' -> 'Test A 2 long name'
+[ DEBUG ] Dependency: 'suite A.Test A 2 long name' -> 'Test A 1'
+[ DEBUG ] Dependency: 'suite A.TestA5 name' -> 'Test__A4'
+[ DEBUG ] Dependency: 'suite A.Test__A4' -> 'Test A 2 long name'
+[ DEBUG ] 'suite A.Test A 2 long name' has already been checked and does not contain a loop.
+[ DEBUG ] Dependency: 'suite A.Test A 2 long name' -> 'Test A 1'
+[ DEBUG ] 'suite A.Test A 1' has already been checked and does not contain a loop.
+[ DEBUG ] Adding 'suite A.TestA6'
+[ DEBUG ] 'suite A.TestA5 name' is already added.
+[ DEBUG ] 'suite A.Test_A_3_Name' is already added.
+[ DEBUG ] 'suite A.Test A 2 long name' is already added.
+[ DEBUG ] 'suite A.Test A 1' is already added.
+[ DEBUG ] 'suite A.Test__A4' is already added.
+[ INFO ] 6 tests would have been chosen. List of test: ['suite A.Test A 1', 'suite A.Test A 2 long name', 'suite A.Test_A_3_Name', 'suite A.Test__A4', 'suite A.TestA5 name', 'suite A.TestA6']
+[ WARNING ] DEBUG mode activated. Emptying test case list...
+[ INFO ] Choosing tests...
+[ DEBUG ] Finishing suite: 'suite A'

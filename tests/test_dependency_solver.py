@@ -234,3 +234,10 @@ class TestClass:
         additional_command = [TESTS_FOLDER + data_folder, '--suite', 'suite O']
         assert check_logs(BASE_COMMAND + additional_command, TESTS_FOLDER + 'test_reflogs/keyword_in_suite_setup.log') == False
         assert check_pabot_ordering(TESTS_FOLDER + 'pabot_ordering_references/keyword_in_suite_setup.txt') == False
+
+
+    def test_different_test_names(self):
+        data_folder =  'data_12/01__suite_A.robot'
+        additional_command = [TESTS_FOLDER + data_folder, '-i', 'ALL']
+        assert check_logs(BASE_COMMAND + additional_command, TESTS_FOLDER + 'test_reflogs/test_names.log') == False
+        assert check_pabot_ordering(TESTS_FOLDER + 'pabot_ordering_references/test_names.txt') == False

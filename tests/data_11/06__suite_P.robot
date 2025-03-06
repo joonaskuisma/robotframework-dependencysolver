@@ -1,6 +1,6 @@
 *** Settings ***
 Resource    resource.robot
-Test Tags    P
+#Test Tags    P
 #Suite Setup    Depends On Suite    suite O
 #Suite Setup    Depends On Suite    name=subsubsuite 1
 

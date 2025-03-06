@@ -9,28 +9,23 @@ import time
 from robot.api import ExecutionResult, SuiteVisitor, ResultVisitor
 from robot.model import TestCase, TestSuite, TagPatterns
 from robot.utils import Matcher
+from collections.abc import Iterable
 from ._version import __version__
 from .sort_ordering import sort_by_output_xml
 
-#TODO:
-# Add 6.0 robot support
 
 rf_version = tuple(map(int, robot.__version__.split(".")))
 
 if rf_version >= (7, 0):
-    suite_name_attr = "full_name"
+    name_attr = "full_name"
 else:
-    suite_name_attr = "longname"
+    name_attr = "longname"
+
+def get_name(item):
+    return getattr(item, name_attr, "Unknown")
 
 
-def get_suite_name(suite):
-    return getattr(suite, suite_name_attr, "Unknown")
-
-def get_test_name(suite):
-    return getattr(suite, suite_name_attr, "Unknown")
-
-
-os.system('color')
+#os.system('color')
 
 PROG_CALL = "depsol"
 NAME = __name__.split(".")[0] 
@@ -278,6 +273,7 @@ class DependencyTestCase:
     def __init__(self, name: str, full_name: str, id: str, tags: list[str], dependencies: TestDependency) -> None:
         self.name = name
         self.full_name = full_name
+        self.longname = full_name   # This is for Robot < 7.0
         self.id = id
         self.tags = tags
         self.dependencies = dependencies
@@ -311,11 +307,11 @@ class ReRunTests(ResultVisitor):
 
     def visit_test(self, test: TestCase) -> None:
         if test.status == 'FAIL':
-            self.failed_tests.append(get_test_name(test))
+            self.failed_tests.append(get_name(test))
         elif test.status == 'SKIP':
-            self.skipped_tests.append(get_test_name(test))
+            self.skipped_tests.append(get_name(test))
         elif test.status == 'PASS':
-            self.passed_tests.append(get_test_name(test))
+            self.passed_tests.append(get_name(test))
         super().visit_test(test)
 
     def end_result(self, result) -> None:
@@ -355,6 +351,7 @@ class DependencySolver(SuiteVisitor):
         self.tc_by_exclude = []
         self.tc_by_exclude_explicit = []
         self.groups = {}  # key = test full name, content = [tests]
+        self.main_suite_full_name = None
 
         if self.args.rerun:
             output_file = self.args.src_file or 'output.xml'
@@ -384,9 +381,25 @@ class DependencySolver(SuiteVisitor):
         return logger
 
 
-    def _matcher(self, name: str, list_of_names: list[str]) -> list[str]:
-        long_name = '.'.join([TestSuite.name_from_source(n) for n in name.split('.')])
-        return [value for value in list_of_names if Matcher(f'*.{long_name}').match(value) or Matcher(long_name).match(value)]
+    def _name_from_source_legacy(self, name: str) -> str:
+        if '__' in name:
+            name = name.split('__', 1)[1] or name
+        name = name.replace('_', ' ').strip()
+        return name.title() if name.islower() else name
+    
+
+    def _get_long_name(self, name: str) -> str:
+        if rf_version >= (7, 0):
+            return '.'.join([TestSuite.name_from_source(n) for n in name.split('.')])
+        else:
+            return '.'.join([self._name_from_source_legacy(n) for n in name.split('.')])
+
+
+    def _matcher(self, name: str, list_of_names: Iterable[str]) -> list[str]:
+        long_name = self._get_long_name(name)
+        patterns = [f'*.{long_name}', long_name, name, f'*.{name}']
+
+        return [value for value in list_of_names if any(Matcher(pattern).match(value) for pattern in patterns)]
 
 
     def _solve_dependencies(self, test_name: str, relation_chain: dict, loop_check_mode: bool = False, parent: str = "") -> dict:
@@ -395,10 +408,10 @@ class DependencySolver(SuiteVisitor):
 
         def _go_to_sub_suites(list_of_suites, tests=[]):
             for suite_dependency in list_of_suites:
-                if self.suites[suite_dependency.full_name].suites:
-                    tests += _go_to_sub_suites(self.suites[suite_dependency.full_name].suites, tests)
+                if self.suites[get_name(suite_dependency)].suites:
+                    tests += _go_to_sub_suites(self.suites[get_name(suite_dependency)].suites, tests)
                 else:
-                    tests += self.suites[suite_dependency.full_name].tests
+                    tests += self.suites[get_name(suite_dependency)].tests
             return tests
 
         test_name_list = self._matcher(test_name, self.test_cases)
@@ -409,8 +422,6 @@ class DependencySolver(SuiteVisitor):
         if len(test_name_list) > 1:
             if parent:
                 self.logger.warning(f"Dependence in test {repr(parent)} is {repr(test_name)} which is not unambiguous but refers to the following tests: {repr(test_name_list)}")
-            else:
-                self.logger.warning("Ei printata tässä tilanteessa!")
 
         for t_name in test_name_list:
             id = self.test_cases[t_name].id
@@ -444,8 +455,8 @@ class DependencySolver(SuiteVisitor):
                 for d in transformed_dependencies:
                     depends_these_tests = self.suites[d].tests or _go_to_sub_suites(self.suites[d].suites)
                     for test_dependency in depends_these_tests:
-                        self.logger.debug(f"Transformed dependency: {repr(t_name)} -> {repr(test_dependency.full_name)}")
-                        relation_chain = self._solve_dependencies(test_dependency.full_name, relation_chain=relation_chain, loop_check_mode=loop_check_mode, parent=t_name)
+                        self.logger.debug(f"Transformed dependency: {repr(t_name)} -> {repr(get_name(test_dependency))}")
+                        relation_chain = self._solve_dependencies(get_name(test_dependency), relation_chain=relation_chain, loop_check_mode=loop_check_mode, parent=t_name)
 
         return relation_chain
 
@@ -472,8 +483,7 @@ class DependencySolver(SuiteVisitor):
         return TestDependency(test_dependencies, suite_dependencies)
     
 
-    def _find_suites(self, suite: TestSuite, suite_setup_dependencies: list[str] = None) -> None:
-        """Recursively searches the entire folder structure, i.e. all sub-suites and tests."""
+    def _find_parent_dependendencies(self, suite: TestSuite, suite_setup_dependencies: list[str] = None) -> list[str]:
         if suite_setup_dependencies is None:
             suite_setup_dependencies = []
 
@@ -482,18 +492,24 @@ class DependencySolver(SuiteVisitor):
             new_dep = self._find_dependencies(suite.setup)
             if new_dep.tests or new_dep.suites:
                 parent_dependencies.append(new_dep)
-        
+        return parent_dependencies
+
+
+    def _find_suites(self, suite: TestSuite, suite_setup_dependencies: list[str] = None) -> None:
+        """Recursively searches the entire folder structure, i.e. all sub-suites and tests."""
+        parent_dependencies = self._find_parent_dependendencies(suite, suite_setup_dependencies)
+
         for sub_suite in suite.suites:
-            if sub_suite.full_name in self.suites:
+            if get_name(sub_suite) in self.suites:
                 message = (
-                    f"Suite name: {repr(sub_suite.full_name)} is duplicated with locations: "
-                    f"{repr(sub_suite.full_name)} and {repr(self.suites[sub_suite.full_name].full_name)}. "
+                    f"Suite name: {repr(get_name(sub_suite))} is duplicated with locations: "
+                    f"{repr(get_name(sub_suite))} and {repr(get_name(self.suites[get_name(sub_suite)]))}. "
                     "Could not solve dependencies."
                 )
                 raise NameError(message)
             else:
-                self.suites[sub_suite.full_name] = sub_suite
-            self.logger.debug(f"Investigating subsuite {repr(sub_suite.full_name)}")
+                self.suites[get_name(sub_suite)] = sub_suite
+            self.logger.debug(f"Investigating subsuite {repr(get_name(sub_suite))}")
             self._find_suites(sub_suite, parent_dependencies)
             self._find_tests(sub_suite, parent_dependencies)
         
@@ -511,7 +527,7 @@ class DependencySolver(SuiteVisitor):
                 dependencies = self._find_dependencies(test.setup)
             if suite_setup_dependencies:
                 self.logger.debug(
-                    f"Merging dependencies in test {repr(test.full_name)} because {repr(suite.full_name)} "
+                    f"Merging dependencies in test {repr(get_name(test))} because {repr(get_name(suite))} "
                     "or its parent suite has 'Suite Setup' with 'Depends On' keyword."
                 )
                 tests = dependencies.tests[:]
@@ -521,17 +537,17 @@ class DependencySolver(SuiteVisitor):
                     suites.extend(suite_setup.suites)
                 dependencies = TestDependency(tests, suites)
                 self.logger.debug(
-                    f"Test {repr(test.full_name)} has dependencies for tests: {repr(dependencies.tests)} "
+                    f"Test {repr(get_name(test))} has dependencies for tests: {repr(dependencies.tests)} "
                     f"and suites: {repr(dependencies.suites)}"
                 )
             if test.name in [tc for tc in self.test_cases.values()]:
                 message = (
-                    f"Test name: {repr(test.full_name)} is duplicated with ids: {repr(test.id)} "
-                    f"and {repr(self.test_cases[test.full_name].id)}. Could not solve dependencies."
+                    f"Test name: {repr(get_name(test))} is duplicated with ids: {repr(test.id)} "
+                    f"and {repr(self.test_cases[get_name(test)].id)}. Could not solve dependencies."
                 )
                 raise NameError(message)
-            self.test_cases[test.full_name] = DependencyTestCase(
-                test.name, test.full_name, test.id, test.tags, dependencies
+            self.test_cases[get_name(test)] = DependencyTestCase(
+                test.name, get_name(test), test.id, test.tags, dependencies
             )
 
 
@@ -574,32 +590,29 @@ class DependencySolver(SuiteVisitor):
             if TagPatterns(tag).match(t.tags):
                 tag_found = True
                 if option == 'include':
-                    #self.tc_by_include.append(t.full_name)
-                    self.logger.debug(f'Requested test {repr(t.full_name)} because of --include option: {repr(tag)}')
+                    self.logger.debug(f'Requested test {repr(get_name(t))} because of --include option: {repr(tag)}')
                 elif option == 'exclude':
-                    #self.tc_by_exclude.append(t.full_name)
-                    self.logger.debug(f'Not requested test {repr(t.full_name)} because of --exclude option: {repr(tag)}')
+                    self.logger.debug(f'Not requested test {repr(get_name(t))} because of --exclude option: {repr(tag)}')
                 elif option == 'exclude_explicit':
-                    #self.tc_by_exclude_explicit.append(t.full_name)
-                    self.logger.debug(f'Not requested test {repr(t.full_name)} in any case, because of --exclude_explicit option: {repr(tag)}')
-                output.append(t.full_name)
+                    self.logger.debug(f'Not requested test {repr(get_name(t))} in any case, because of --exclude_explicit option: {repr(tag)}')
+                output.append(get_name(t))
         if not tag_found and option == 'include':
             self.logger.warning(f'Given tag: {repr(tag)} not found from any tests. Check your spelling.')
         return output
 
 
     def _check_suite(self, suite_name: str, suite_found: bool = False) -> None:
-        long_name = '.'.join([TestSuite.name_from_source(n) for n in suite_name.split('.')])
+        long_name = self._get_long_name(suite_name)
         for s in self.suites:
             if Matcher(f'*{long_name}').match(s) or Matcher(f'*.{long_name}').match(s):
                 suite_found = True
                 for sub_s in self.suites[s].suites:
                     self.logger.debug(f'{repr(suite_name)} has subsuite {repr(sub_s.name)}. Investigating...')
-                    self._check_suite(sub_s.full_name, suite_found=suite_found)
+                    self._check_suite(get_name(sub_s), suite_found=suite_found)
 
                 for t in self.suites[s].tests:
-                    self.logger.debug(f'Requested test {repr(t.full_name)} because of subsuite or direct --suite option: {repr(suite_name)}')
-                    self.tc_by_suite.append(t.full_name)
+                    self.logger.debug(f'Requested test {repr(get_name(t))} because of subsuite or direct --suite option: {repr(suite_name)}')
+                    self.tc_by_suite.append(get_name(t))
 
         if not suite_found:
             message = f"Argument: {repr(suite_name)} not found in test suites."
@@ -609,11 +622,10 @@ class DependencySolver(SuiteVisitor):
     def _check_test(self, test_name: str) -> list[str]:
         test_case_found = False
         output = []
-        long_name = '.'.join([TestSuite.name_from_source(n) for n in test_name.split('.')])
+        long_name = self._get_long_name(test_name)
         self.logger.debug(f'Requested test {repr(test_name)} directly.')
         for t in self.test_cases:
             if Matcher(f'*.{long_name}').match(t) or Matcher(long_name).match(t):
-                #self.tc_by_test.append(t)
                 output.append(t)
                 test_case_found = True
 
@@ -676,7 +688,7 @@ class DependencySolver(SuiteVisitor):
         if self.desired_tests:
             if self.args.reverse:
                 find_these_tests = self.desired_tests
-                self.desired_tests = [t.full_name for t in self.test_cases.values()]
+                self.desired_tests = [get_name(t) for t in self.test_cases.values()]
 
             self.logger.debug(f'These are tests which user requested: {repr(self.desired_tests)}')
             self.logger.info('Starting relation chain checking...')
@@ -805,8 +817,8 @@ class DependencySolver(SuiteVisitor):
             for s in self.test_cases[r].dependencies.suites:
                 for matching_s in self._matcher(s, self.suites):
                     for t_in_s in self.suites[matching_s].tests:
-                        self.test_cases[r].add_solved_test_dependencies(t_in_s.full_name)
-                        self.test_cases[t_in_s.full_name].add_direct_precondition(r)
+                        self.test_cases[r].add_solved_test_dependencies(get_name(t_in_s))
+                        self.test_cases[get_name(t_in_s)].add_direct_precondition(r)
 
         self._define_groups()
 
@@ -838,13 +850,17 @@ class DependencySolver(SuiteVisitor):
         """When suite starts, check if it is main suite/folder. If it is, loops through all test cases and finds all relation chains.
         After then it defines which test to execute."""
         if not self.error_occurs:
-            self.logger.debug(f"Started suite: {repr(suite.full_name)}")
+            self.logger.debug(f"Started suite: {repr(get_name(suite))}")
         if not self.check_done:
             self.logger.info("Starting to explore the dependencies...")
-            self.main_suite_full_name = suite.full_name
+            self.main_suite_full_name = get_name(suite)
             try:
-                self.suites[suite.full_name] = suite
-                self._find_suites(suite)
+                self.suites[get_name(suite)] = suite
+                if len(suite.suites) > 0:
+                    self._find_suites(suite)
+                else:
+                    parent_dependencies = self._find_parent_dependendencies(suite)
+                    self._find_tests(suite, parent_dependencies)
                 self._define_running_tests()
             except (NameError, RecursionError) as err:
                 self.logger.error(f"{err.args[0]} Execution of tests cannot be started!")
@@ -856,13 +872,13 @@ class DependencySolver(SuiteVisitor):
 
     def end_suite(self, suite: TestSuite) -> None:
         """Selects the tests and suites to be executed."""
-        suite.tests = [t for t in suite.tests if t.full_name in self.list_of_running_tests_names]
+        suite.tests = [t for t in suite.tests if get_name(t) in self.list_of_running_tests_names]
         for t in suite.tests:
-            self.logger.debug(f"Test {repr(t.full_name)} will be executed.")
+            self.logger.debug(f"Test {repr(get_name(t))} will be executed.")
         suite.suites = [s for s in suite.suites if s.test_count > 0]
         for s in suite.suites:
-            self.logger.debug(f"Suite {repr(s.full_name)} will be executed.")
+            self.logger.debug(f"Suite {repr(get_name(s))} will be executed.")
         if not self.error_occurs:
-            self.logger.debug(f"Finishing suite: {repr(suite.full_name)}")
-        if not self.args.without_timestamps and suite.full_name == self.main_suite_full_name:
+            self.logger.debug(f"Finishing suite: {repr(get_name(suite))}")
+        if not self.args.without_timestamps and get_name(suite) == self.main_suite_full_name:
             self.logger.info("All dependencies resolved in %s seconds." % str(time.time() - self.start_time))

@@ -1,6 +1,6 @@
 *** Settings ***
 Resource    resource.robot
-Test Tags    A
+#Test Tags    A
 Suite Setup    Log    message=This depends on nothing
 
 *** Test Cases ***

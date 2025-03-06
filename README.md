@@ -7,6 +7,7 @@
 
 - [Introduction](#introduction)
 - [Versioning](#versioning)
+- [Dependencies](#dependencies)
 - [Installation](#installation)
 - [How define dependencies with DependencyLibrary](#how-define-dependencies-with-dependencylibrary)
 - [Using DependencySolver](#using-dependencysolver)
@@ -41,6 +42,18 @@ refer to section [Using With Pabot](#using-with-pabot).
 
 This library\'s version numbers follow the [SemVer 2.0.0
 specification](https://semver.org/spec/v2.0.0.html).
+
+## Dependencies
+
+To function correctly, **DependencySolver** requires the following versions:
+
+- **Python** >= 3.10  
+- **Robot Framework** >= 5.0  
+- **robotframework-dependencylibrary** >= 4.0  
+
+Additionally, for parallel test execution, you can optionally use:  
+
+- **robotframework-pabot** > 4.1  
 
 ## Installation
 
@@ -234,8 +247,9 @@ Additionally, you could use tags also (but only static, not dynamic tags):
 robot --prerunmodifier DependencySolver.depsol:-i:tagC <other_robot_commands> <your_test_folder>
 ```
 
-You can also use shortcut `depsol` directly. This actually calls `robot` with
-`--prerunmodifier`.
+You can also use shortcut `depsol` directly. This internally calls `robot` 
+with `--prerunmodifier` option. When using this shortcut, all options 
+recognized by `depsol` are passed to `--prerunmodifier` instead of `robot`.
 
 ```cmd
 depsol -t "test C" <other_robot_commands> <your_test_folder>
@@ -245,6 +259,18 @@ Or
 depsol -i "tagC" <other_robot_commands> <your_test_folder>
 ```
 These commands will have the same effect as the two commands mentioned above.
+
+**Note:** If you call `robot` directly, `<other_robot_commands>` should not 
+include the options `--test`, `--suite`, `--include` or `--exclude`, as they 
+will be executed before `--prerunmodifier`. This will cause **depsol** to 
+function incorrectly. Instead, pass these options to `--prerunmodifier`, 
+using `:` as a separator instead of a space. If the test name contains spaces, 
+enclose it in `""`.
+
+For example:
+```cmd
+robot --prerunmodifier DependencySolver.depsol:-i:tagC:-t:"Test B" <your_test_folder>
+```
 
 For more options and help, please run
 
@@ -258,6 +284,8 @@ depsol --help
 - **depsol.pabot.txt**: A file for use with [Pabot](https://pabot.org/), detailing how the selected tests can be run in parallel while respecting dependencies.
 
 ## Using with Pabot
+
+Please, read [Using DependencySolver](#using-dependencysolver) at first.
 
 If you want to run tests with Pabot, you need at least version 4.1.0 of the 
 [robotframework-pabot](https://pypi.org/project/robotframework-pabot/) library.
@@ -291,6 +319,9 @@ like this:
 
 ## Contributing
 
-If you would like to request a new feature or modification to existing functionality, or report a bug, you can open an issue on [GitHub](https://github.com/joonaskuisma/robotframework-dependencysolver/issues). For any issues, please create a bug report and reference the version in question. 
+If you would like to request a new feature or modification to existing 
+functionality, or report a bug, you can open an issue on [GitHub](https://github.com/joonaskuisma/robotframework-dependencysolver/issues). 
+For any issues, please create a bug report and reference the version in question. 
 
-If you want to contribute and participate in the project, please read the [Developer Guide](README.dev.md) file first.
+If you want to contribute and participate in the project, please read the 
+[Developer Guide](README.dev.md) file first.

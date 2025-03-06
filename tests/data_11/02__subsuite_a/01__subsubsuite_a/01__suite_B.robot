@@ -1,6 +1,6 @@
 *** Settings ***
 Resource    ../../resource.robot
-Test Tags    B
+#Test Tags    B
 Test Setup    Depends On Test    name=Test B1
 
 *** Test Cases ***

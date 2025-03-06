@@ -1,6 +1,6 @@
 *** Settings ***
 #Resource    resource.robot
-Test Tags    testC
+#Test Tags    testC
 Library  DependencyLibrary
 
 *** Test Cases ***
