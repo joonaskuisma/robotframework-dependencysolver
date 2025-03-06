@@ -7,6 +7,7 @@
 
 - [Introduction](#introduction)
 - [Versioning](#versioning)
+- [Dependencies](#dependencies)
 - [Installation](#installation)
 - [How define dependencies with DependencyLibrary](#how-define-dependencies-with-dependencylibrary)
 - [Using DependencySolver](#using-dependencysolver)
@@ -41,6 +42,18 @@ refer to section [Using With Pabot](#using-with-pabot).
 
 This library\'s version numbers follow the [SemVer 2.0.0
 specification](https://semver.org/spec/v2.0.0.html).
+
+## Dependencies
+
+To function correctly, **DependencySolver** requires the following versions:
+
+- **Python** >= 3.10  
+- **Robot Framework** >= 5.0  
+- **robotframework-dependencylibrary** >= 4.0  
+
+Additionally, for parallel test execution, you can optionally use:  
+
+- **robotframework-pabot** > 4.1  
 
 ## Installation
 
