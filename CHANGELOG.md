@@ -1,3 +1,24 @@
+# [v1.1.0] - 2025-03-06
+
+## 🚀 Release Notes
+
+### 🔥 What's New?
+- Added support for older Robot Framework versions, starting from 5.0.
+
+### 🐞 Bug Fixes
+- Fixed a bug that prevents calling `path/your_test_suite.robot` suite directly.
+- Fixed a bug that prevents using underscores `_` in Test Case names.
+
+### 📈 Improvements
+- Updated the CI workflow to include tests for multiple Robot Framework versions, improving test coverage and compatibility.
+- Enhanced documentation to clarify supported versions and usage.
+
+### 📦 Dependencies Updated
+- Updated `robotframework` backward to v5.0+ from v7.0+ to support older versions.
+
+### 🔄 Commit Changes Since Last Version (v1.0.0):
+- Add Support for Older Robot Framework Versions (5.0+), Update CI & Improve Docs (#4) (Joonas Kuisma)
+
 # [v1.0.0] - 2025-02-28
 
 ## 🚀 Release Notes
