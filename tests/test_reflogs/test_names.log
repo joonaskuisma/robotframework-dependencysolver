@@ -1,4 +1,4 @@
-[ INFO ] The following arguments were obtained: ('--include', 'ALL', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
+[ INFO ] The following arguments were obtained: ('--include', 'ALL', '--randomize', 'NONE', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
 [ DEBUG ] Started suite: 'suite A'
 [ INFO ] Starting to explore the dependencies...
 [ DEBUG ] Requested test 'suite A.Test A 1' because of --include option: 'ALL'

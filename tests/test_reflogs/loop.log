@@ -1,4 +1,4 @@
-[ INFO ] The following arguments were obtained: ('--include', 'C2', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
+[ INFO ] The following arguments were obtained: ('--include', 'C2', '--randomize', 'NONE', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
 [ DEBUG ] Started suite: 'Data 2'
 [ INFO ] Starting to explore the dependencies...
 [ DEBUG ] Investigating subsuite 'Data 2.suiteC'

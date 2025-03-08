@@ -1,4 +1,4 @@
-[ INFO ] The following arguments were obtained: ('--include', 'E', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
+[ INFO ] The following arguments were obtained: ('--include', 'E', '--randomize', 'NONE', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
 [ DEBUG ] Started suite: 'Data 4'
 [ INFO ] Starting to explore the dependencies...
 [ DEBUG ] Investigating subsuite 'Data 4.suiteD'
