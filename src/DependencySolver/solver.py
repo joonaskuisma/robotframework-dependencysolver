@@ -3,9 +3,10 @@
 
 import argparse
 import logging
-import os
+import os  # Tarvitaanko?
 import robot
 import time
+import random
 from robot.api import ExecutionResult, SuiteVisitor, ResultVisitor
 from robot.model import TestCase, TestSuite, TagPatterns
 from robot.utils import Matcher
@@ -168,6 +169,18 @@ and then organize individual tests and groups in the ordering file so that execu
 or groups containing such tests, followed by the slowest to the fastest. If 'output.xml' does not contain the execution 
 time of a test, the test is considered skipped.
 """
+HELP_RANDOMIZE = f"""The --randomize option allows users to randomize the execution order of tests and dependency groups (suites). 
+It works quite similarly to the option in Robot Framework, providing the following RANDOMIZE behaviors:
+
+NONE: No randomization (default).
+TESTS: Randomizes the order of tests within each group, maintaining their dependencies.
+SUITES: Randomizes the execution order of all test groups (suites).
+ALL: Randomizes both tests and suites for maximum variation.
+
+Optionally, a custom random seed can be provided using the syntax VALUE;SEED, where the seed must be an integer.
+NOTE: Since the general delimiter for prerunmodifier arguments is `:`, unlike in the Robot Framework syntax, 
+a semicolon `;` must be used as the delimiter instead.
+"""
 
 
 def print_prog_name():
@@ -182,6 +195,21 @@ class DependencyArgumentParser(argparse.ArgumentParser):
         def uppercase_type(value: str) -> str:
             return value.upper()
         
+        def parse_randomize(value: str) -> tuple[str, int | None]:
+            if ';' in value:
+                option, seed = value.split(';')
+                try:
+                    seed = int(seed)
+                except ValueError:
+                    raise argparse.ArgumentTypeError(f"Invalid seed value: {seed}. It must be an integer.")
+            else:
+                option = value
+                seed = None 
+            option = uppercase_type(option)
+            if option not in ['NONE', 'TESTS', 'SUITES', 'ALL']:
+                raise argparse.ArgumentTypeError(f"Invalid randomize option: {option}")
+            return option, seed
+        
         options = self.add_argument_group(
             'robot-like options',
             'These options are used like after \'robot\' command but they can work slightly differently.\n'
@@ -194,6 +222,7 @@ class DependencyArgumentParser(argparse.ArgumentParser):
         options.add_argument('-e', '--exclude', action='append', help=HELP_EXCLUDE, metavar='tag *')
         options.add_argument('-ee', '--exclude_explicit', action='append', help=HELP_EXCLUDE_EXPLICIT, metavar='tag *')
         options.add_argument('--rerun', action='store_true', help=HELP_RERUN)
+        options.add_argument('--randomize', default='NONE', type=parse_randomize, help=HELP_RANDOMIZE)
 
         solver_options = self.add_argument_group(
             f'{PROG_NAME} options',
@@ -338,8 +367,8 @@ class DependencySolver(SuiteVisitor):
 
         self.error_occurs = False
         self.check_done = False
-        self.test_cases = {}  # test.full:name : DependencyTestCase
-        self.suites = {}  # suite.full_name : TestSuite
+        self.test_cases = {}  # test.full_name: DependencyTestCase
+        self.suites = {}  # suite.full_name: TestSuite
         self.possible_loop = {}
         self.relation_chains = {}
         self.list_of_running_tests_names = []
@@ -350,7 +379,7 @@ class DependencySolver(SuiteVisitor):
         self.tc_by_include = []
         self.tc_by_exclude = []
         self.tc_by_exclude_explicit = []
-        self.groups = {}  # key = test full name, content = [tests]
+        self.groups = {}  # test.full_name: [tests]
         self.main_suite_full_name = None
 
         if self.args.rerun:
@@ -808,7 +837,18 @@ class DependencySolver(SuiteVisitor):
         """Used for pabot to write ordering.txt file as name depsol.pabot.txt."""
         all_text = ""
         ordered_list = [t for t in self.test_cases if t in self.list_of_running_tests_names]
-        
+
+        if self.args.randomize:
+            random_option, seed = self.args.randomize
+            #self.logger.info(f"Randomization option: {random_option}, Seed: {seed}")
+
+            if seed is not None:
+                random.seed(int(seed))
+                #self.logger.info(f"Random generator seeded with: {seed}")
+            else:
+                #self.logger.info("Random generator not seeded.")
+                pass
+
         for r in ordered_list:
             for t in self.test_cases[r].dependencies.tests:
                 for matching_t in self._matcher(t, self.test_cases):
@@ -826,6 +866,14 @@ class DependencySolver(SuiteVisitor):
             sorted_groups = sort_by_output_xml(self.groups, inpath=self.args.src_file or 'output.xml')
         else:
             sorted_groups = self.groups
+
+        if random_option in ['ALL', 'SUITES']:
+            items = list(sorted_groups.items())
+            random.shuffle(items)
+            sorted_groups = dict(items)
+
+        if random_option in ['ALL', 'TESTS']:
+            random.shuffle(ordered_list)
 
         for g in sorted_groups:
             group_text, group_end_text = "", ""
@@ -880,5 +928,5 @@ class DependencySolver(SuiteVisitor):
             self.logger.debug(f"Suite {repr(get_name(s))} will be executed.")
         if not self.error_occurs:
             self.logger.debug(f"Finishing suite: {repr(get_name(suite))}")
-        if not self.args.without_timestamps and get_name(suite) == self.main_suite_full_name:
-            self.logger.info("All dependencies resolved in %s seconds." % str(time.time() - self.start_time))
+            if not self.args.without_timestamps and get_name(suite) == self.main_suite_full_name:
+                self.logger.info("All dependencies resolved in %s seconds." % str(time.time() - self.start_time))

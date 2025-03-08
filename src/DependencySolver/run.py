@@ -34,6 +34,7 @@ def build_command():
         'exclude': args.exclude,
         'exclude_explicit': args.exclude_explicit,
         'rerun': args.rerun,
+        'randomize': args.randomize,
         'reverse': args.reverse,
         'debug': args.debug,
         'without_timestamps': args.without_timestamps,
@@ -51,6 +52,11 @@ def build_command():
             prerun_modifier += f'--{prerun_params}:'
         elif isinstance(values, str) and values:
             prerun_modifier += f'--{prerun_params}:{values}:'
+        elif isinstance(values, tuple) and values:
+            if values[1] is not None:
+                prerun_modifier += f'--{prerun_params}:{values[0]};{str(values[1])}:'
+            else:
+                prerun_modifier += f'--{prerun_params}:{values[0]}:'
         elif isinstance(values, list) and values:
             for value in values:
                 prerun_modifier += f'--{prerun_params}:{value}:'
@@ -65,7 +71,8 @@ def build_command():
     prerun_modifier_cmd = [prerun_call, f'{PROG_NAME}:{prerun_modifier[:-1]}']
     command.extend(prerun_modifier_cmd)
     command.extend(unknown)
-
+    
+    print(command)
     return command
 
 
