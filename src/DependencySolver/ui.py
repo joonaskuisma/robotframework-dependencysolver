@@ -2,10 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as messagebox
 
+from DependencySolver._version import __version__
+
 class TestUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("DependencySolver-UI")
+        self.root.title(f"DependencySolver-UI {__version__}")
         self.root.protocol("WM_DELETE_WINDOW", self.export_and_close)
 
         self.tests = {}
@@ -13,6 +15,7 @@ class TestUI:
         self.current_selected_tests = []
         self.parse_tests_file()
         self.tooltip = None
+        self.active_scroll_target = None
 
         # Menubar
         menubar = tk.Menu(self.root)
@@ -34,11 +37,23 @@ class TestUI:
         self.paned = ttk.PanedWindow(self.root, orient=tk.HORIZONTAL)
         self.paned.pack(fill=tk.BOTH, expand=True)
 
-        # Treeview-side
+        # Treeview container frame
         self.tree_frame = ttk.Frame(self.paned)
-        self.tree = ttk.Treeview(self.tree_frame)
+        self.tree_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10, expand=True)
+
+        self.tree_scroll_y = ttk.Scrollbar(self.tree_frame, orient="vertical")
+        self.tree = ttk.Treeview(self.tree_frame, yscrollcommand=self.tree_scroll_y.set)
         self.tree.heading("#0", text="Test Cases")
-        self.tree.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        self.tree_scroll_y.config(command=self.tree.yview)
+
+        self.tree.grid(row=0, column=0, sticky="nsew")
+        self.tree_scroll_y.grid(row=0, column=1, sticky="ns")
+
+        self.tree_frame.grid_rowconfigure(0, weight=1)
+        self.tree_frame.grid_columnconfigure(0, weight=1)
+
         self.test_vars = {}
         self.build_tree()
         self.paned.add(self.tree_frame, weight=1)
@@ -65,6 +80,8 @@ class TestUI:
         self.canvas_toolbar = ttk.Frame(self.canvas_frame)
         self.canvas_toolbar.place(relx=1.0, x=-30, y=10, anchor="ne")
 
+        self.total_selected_label = tk.Label(self.canvas_toolbar, text="Total Selected Tests: 0", font=("Arial", 10, "italic"))
+        self.total_selected_label.pack(side=tk.TOP, padx=10)
         ttk.Button(self.canvas_toolbar, text="+", width=2, command=self._on_key_zoom_in).pack(side=tk.LEFT)
         ttk.Button(self.canvas_toolbar, text="-", width=2, command=self._on_key_zoom_out).pack(side=tk.LEFT)
         ttk.Button(self.canvas_toolbar, text="⭯", width=2, command=self.reset_zoom).pack(side=tk.LEFT)
@@ -80,9 +97,65 @@ class TestUI:
         self.canvas_scale = 1.0
         self.canvas.bind_all("<Control-MouseWheel>", self._on_canvas_zoom)
 
+        self.tree.bind("<Enter>", lambda e: self._set_scroll_target("tree"))
+        self.tree.bind("<Leave>", lambda e: self._set_scroll_target(None))
+
+        self.canvas.bind("<Enter>", lambda e: self._set_scroll_target("canvas"))
+        self.canvas.bind("<Leave>", lambda e: self._set_scroll_target(None))
+
         # Mouse scroll
-        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
-        self.canvas.bind_all("<Shift-MouseWheel>", self._on_shift_mousewheel)
+        self.root.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.root.bind_all("<Shift-MouseWheel>", self._on_mousewheel)
+        self.root.bind_all("<Button-4>", self._on_mousewheel)  # Linux up
+        self.root.bind_all("<Button-5>", self._on_mousewheel)  # Linux down
+
+
+    def _set_scroll_target(self, target):
+        self.active_scroll_target = target
+
+
+    def _on_mousewheel(self, event):
+        is_shift = (event.state & 0x0001) != 0  # Shift = bit 0x0001
+
+        if event.num in (4, 5):  # Linux
+            direction = -1 if event.num == 4 else 1
+            if self.active_scroll_target == "canvas":
+                self.canvas.yview_scroll(direction, "units")
+            elif self.active_scroll_target == "tree":
+                self.tree.yview_scroll(direction, "units")
+            return
+
+        # Windows/macOS (MouseWheel)
+        delta = int(event.delta / 120)
+        if self.active_scroll_target == "canvas":
+            if is_shift:
+                self.canvas.xview_scroll(-delta, "units")
+            else:
+                self.canvas.yview_scroll(-delta, "units")
+        elif self.active_scroll_target == "tree":
+            if not is_shift:
+                self.tree.yview_scroll(-delta, "units")
+
+
+    def _bind_canvas_scroll(self, event=None):
+        self.canvas.bind_all("<MouseWheel>", self._on_canvas_scroll)
+        self.canvas.bind_all("<Button-4>", self._on_canvas_scroll)  # Linux support
+        self.canvas.bind_all("<Button-5>", self._on_canvas_scroll)
+
+
+    def _unbind_canvas_scroll(self, event=None):
+        self.canvas.unbind_all("<MouseWheel>")
+        self.canvas.unbind_all("<Button-4>")
+        self.canvas.unbind_all("<Button-5>")
+
+
+    def _on_canvas_scroll(self, event):
+        if event.delta:
+            self.canvas.yview_scroll(-1 * int(event.delta / 120), "units")
+        elif event.num == 4:  # Linux: scroll up
+            self.canvas.yview_scroll(-1, "units")
+        elif event.num == 5:  # Linux: scroll down
+            self.canvas.yview_scroll(1, "units")
 
 
     def build_tree(self):
@@ -170,7 +243,6 @@ class TestUI:
             self.test_vars[full_path].set(state)
 
 
-
     def update_checkbox_display_recursive(self, item_id):
         text = self.tree.item(item_id, "text")
         full_path = self.get_full_path(item_id)
@@ -222,6 +294,108 @@ class TestUI:
         --test Tests.Test D1
         --test Tests.Test D2
         --test Test E1
+        {
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A1 
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A2 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A1
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A3 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A2
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A4 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A3
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A5 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A4
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A6 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A5
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A7 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A6
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A8 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A7
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A9 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A8
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A10 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A9
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A11 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A10
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A12 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A11
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A13 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A12
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A14 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A13
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A15 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A14
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A16 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A15
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A17 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A16
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A18 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A17
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A19 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A18
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A20 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A19
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A21 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A20
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A22 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A21
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A23 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A22
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A24 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A23
+        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A25 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A24
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A1
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A2 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A1
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A3 
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A4 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A3
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A5 
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A6 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A5
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A7 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A2 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A4 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A6
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A8 
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A9 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A8 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A7
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A10 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A9
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A11 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A9
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A12 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A9
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A13 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A10 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A11 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A12
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A14 
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A15
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A16
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A17 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A14
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A18 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A15
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A19 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A16
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A20 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A17 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A18 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A19
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A21 
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A22
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A23 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A21 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A22
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A24 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A20 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A23
+        --test Tests.suite D.subsuite A.subsubsuite A.Test A25 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A13 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A24
+        --test Tests.suite D.subsuite A.Test A1
+        --test Tests.suite D.subsuite A.Test A2
+        --test Tests.suite D.subsuite A.Test A3
+        --test Tests.suite D.subsuite A.Test A4
+        --test Tests.suite D.subsuite A.Test A5
+        --test Tests.suite D.subsuite A.Test A6
+        --test Tests.suite D.subsuite A.Test A7
+        --test Tests.suite D.subsuite A.Test A8
+        --test Tests.suite D.subsuite A.Test A9
+        --test Tests.suite D.subsuite A.Test A10
+        --test Tests.suite D.subsuite A.Test A11
+        --test Tests.suite D.subsuite A.Test A12
+        --test Tests.suite D.subsuite A.Test A13
+        --test Tests.suite D.subsuite A.Test A14
+        --test Tests.suite D.subsuite A.Test A15
+        --test Tests.suite D.subsuite A.Test A16
+        --test Tests.suite D.subsuite A.Test A17
+        --test Tests.suite D.subsuite A.Test A18
+        --test Tests.suite D.subsuite A.Test A19
+        --test Tests.suite D.subsuite A.Test A20
+        --test Tests.suite D.subsuite A.Test A21
+        --test Tests.suite D.subsuite A.Test A22
+        --test Tests.suite D.subsuite A.Test A23
+        --test Tests.suite D.subsuite A.Test A24
+        --test Tests.suite D.subsuite A.Test A25
+        --test Tests.suite D.Test A1
+        --test Tests.suite D.Test A2
+        --test Tests.suite D.Test A3
+        --test Tests.suite D.Test A4
+        --test Tests.suite D.Test A5
+        --test Tests.suite D.Test A6
+        --test Tests.suite D.Test A7
+        --test Tests.suite D.Test A8
+        --test Tests.suite D.Test A9
+        --test Tests.suite D.Test A10
+        --test Tests.suite D.Test A11
+        --test Tests.suite D.Test A12
+        --test Tests.suite D.Test A13
+        --test Tests.suite D.Test A14
+        --test Tests.suite D.Test A15
+        --test Tests.suite D.Test A16
+        --test Tests.suite D.Test A17
+        --test Tests.suite D.Test A18
+        --test Tests.suite D.Test A19
+        --test Tests.suite D.Test A20
+        --test Tests.suite D.Test A21
+        --test Tests.suite D.Test A22
+        --test Tests.suite D.Test A23
+        --test Tests.suite D.Test A24
+        --test Tests.suite D.Test A25
+        }
         """
         
         lines = test_data.strip().split('\n')
@@ -250,7 +424,6 @@ class TestUI:
 
     def draw_dependencies(self, selected_tests_original):
         self.current_selected_tests = selected_tests_original.copy()
-
         self.canvas.delete("all")
 
         x_spacing = 200
@@ -261,7 +434,6 @@ class TestUI:
 
         positions = {}
 
-        # 1. Adding prerequisites to the selection
         def collect_with_dependencies(test, collected):
             if test in collected:
                 return
@@ -274,7 +446,6 @@ class TestUI:
         for test in selected_tests_original:
             collect_with_dependencies(test, full_selected)
 
-        # 2. Group division
         visited = set()
         groups = []
 
@@ -297,16 +468,25 @@ class TestUI:
             groups.append(group)
             ungrouped -= group
 
+        # Sort groups by size descending, but collect individual ones separately
+        individual_tests = [g for g in groups if len(g) == 1]
+        grouped_tests = [g for g in groups if len(g) > 1]
+        grouped_tests.sort(key=lambda g: -len(g))
+
+        individual_group = set.union(*individual_tests) if individual_tests else set()
+        sorted_groups = grouped_tests
+        if individual_group:
+            sorted_groups.append(individual_group) 
+
         color_palette = ["lightblue", "lightgreen", "lightyellow", "lightpink", "lightgray", "#FFD580", "#B0E0E6"]
         current_y = y_start
 
-        for idx, group in enumerate(groups):
+        for idx, group in enumerate(sorted_groups):
             group_color = color_palette[idx % len(color_palette)]
-            # Delete a group if none of its tests are in the original selection
+
             if not any(t in selected_tests_original for t in group):
                 continue
 
-            # Depth levels
             group_level_map = {}
             def compute_level(test, visited):
                 if test in visited:
@@ -327,10 +507,15 @@ class TestUI:
             max_height = max(len(tests) for tests in level_tests.values())
             level_y_offsets = {lvl: current_y for lvl in level_tests}
 
-            # Title
-            self.canvas.create_text(x_start - 100, current_y - 100, text=f"Group {idx + 1}", anchor="w", font=("Arial", 14, "bold"))
+            # Group title
+            if individual_group and group == individual_group:
+                group_name = "Individual Test Cases"
+            else:
+                group_name = f"Group {idx + 1}"
+            self.canvas.create_text(x_start - 100, current_y - 100,
+                                    text=f"{group_name} ({len(group)} tests)",
+                                    anchor="w", font=("Arial", 14, "bold"))
 
-            # Let's draw tests
             for level in sorted(level_tests):
                 for test in sorted(level_tests[level]):
                     x = x_start + level * x_spacing
@@ -344,9 +529,10 @@ class TestUI:
                     self.canvas.tag_bind(box, "<Leave>", self.hide_tooltip)
                     self.canvas.tag_bind(label, "<Enter>", lambda e, t=test: self.show_tooltip(e, t))
                     self.canvas.tag_bind(label, "<Leave>", self.hide_tooltip)
+
                     level_y_offsets[level] += y_spacing
 
-            # Let's draw arrows
+            # Arrows
             for test in group:
                 for dep in self.tests[test]["dependencies"]:
                     if dep in group:
@@ -355,6 +541,9 @@ class TestUI:
                         self.canvas.create_line(x1 - 60, y1, x2 + 60, y2, arrow=tk.LAST)
 
             current_y += (max_height + 1) * y_spacing + row_spacing
+
+        # Show total count
+        self.total_selected_label.config(text=f"Total Selected Tests: {len(full_selected)}")
 
         self.canvas.scale("all", 0, 0, self.canvas_scale, self.canvas_scale)
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
@@ -408,14 +597,6 @@ class TestUI:
         if self.tooltip:
             self.canvas.delete(self.tooltip)
             self.tooltip = None
-
-
-    def _on_mousewheel(self, event):
-        self.canvas.yview_scroll(-1 * (event.delta // 120), "units")
-
-
-    def _on_shift_mousewheel(self, event):
-        self.canvas.xview_scroll(-1 * (event.delta // 120), "units")
 
 
     def _on_key_zoom_in(self):
@@ -510,7 +691,6 @@ class TestUI:
 
         self.canvas.xview_moveto(0)
         self.canvas.yview_moveto(0)
-
 
 
     def _update_zoom_label(self):
