@@ -24,7 +24,7 @@ def build_command():
         prerun_call = '--pabotprerunmodifier'
         unknown.extend(['--testlevelsplit', '--ordering', f'{PROG_CALL}.pabot.txt'])
 
-    if not any(arg for arg in [args.test, args.suite, args.include, args.exclude, args.exclude_explicit, args.rerun]):
+    if not any(arg for arg in [args.test, args.suite, args.include, args.exclude, args.exclude_explicit, args.rerun, args.ui]):
         print(f"WARNING: To use '{PROG_CALL}', please provide a parameter related to test selection, for example '--test' or '--include'. See: '{PROG_CALL} --help'" )
     
     prerun_params = {
@@ -42,6 +42,7 @@ def build_command():
         'consoleloglevel': args.consoleloglevel,
         'src_file': args.src_file,  # type: io.TextIOBase
         'pabotlevel': args.pabotlevel,
+        'ui': args.ui,
     }
 
     command = [args.tool]

@@ -5,17 +5,20 @@ import tkinter.messagebox as messagebox
 from DependencySolver._version import __version__
 
 class TestUI:
-    def __init__(self, root):
+    # TODO: ADD default values:
+    def __init__(self, root, data, default_test_cases):
         self.root = root
-        self.root.title(f"DependencySolver-UI {__version__}")
+        self.root.title(f"DependencySolver-GUI {__version__}")
         self.root.protocol("WM_DELETE_WINDOW", self.export_and_close)
 
         self.tests = {}
         self.test_order = []
         self.current_selected_tests = []
-        self.parse_tests_file()
+        self.all_current_selected_test_cases = []
+        self.parse_tests_file(data)
         self.tooltip = None
         self.active_scroll_target = None
+        self.default_test_cases = default_test_cases
 
         # Menubar
         menubar = tk.Menu(self.root)
@@ -109,6 +112,8 @@ class TestUI:
         self.root.bind_all("<Button-4>", self._on_mousewheel)  # Linux up
         self.root.bind_all("<Button-5>", self._on_mousewheel)  # Linux down
 
+        self.draw_dependencies(self.default_test_cases)
+
 
     def _set_scroll_target(self, target):
         self.active_scroll_target = target
@@ -173,11 +178,12 @@ class TestUI:
                 parent = self.tree_nodes[path]
 
             # Last part is test itself
-            var = tk.BooleanVar()
-            var.set(False)
+            var = tk.BooleanVar(value=(test_name in self.default_test_cases))
             self.test_vars[test_name] = var
 
             display_text = f"[ ] {parts[-1]}"
+            if var.get():
+                display_text = f"[x] {parts[-1]}"
             self.tree.item(self.tree_nodes[path], text=display_text)
 
             self.tree.tag_bind(test_name, '<Button-1>', lambda e, name=test_name: self.toggle_checkbox(name))
@@ -265,140 +271,8 @@ class TestUI:
         return '.'.join(parts)
 
 
-    def parse_tests_file(self):
-        test_data = """
-        --test Tests.suite A.Test A5
-        {
-        --test Tests.suite A.Test A1
-        --test Tests.suite A.Test A2 #DEPENDS Tests.suite A.Test A1
-        --test Tests.suite A.Test A3 #DEPENDS Tests.suite A.Test A2
-        --test Tests.suite A.Test A4 #DEPENDS Tests.suite A.Test A3
-        }
-        {
-        --test Tests.suite B.Test A6
-        --test Tests.suite B.Test A7 #DEPENDS Tests.suite B.Test A6
-        --test Tests.suite B.Test A8 #DEPENDS Tests.suite B.Test A6 
-        --test Tests.suite B.Test A9 #DEPENDS Tests.suite B.Test A6 
-        --test Tests.suite B.Test A10 #DEPENDS Tests.suite B.Test A7
-        --test Tests.suite B.Test A11 #DEPENDS Tests.suite B.Test A7
-        --test Tests.suite B.Test A12 #DEPENDS Tests.suite B.Test A8 
-        --test Tests.suite B.Test A13 #DEPENDS Tests.suite B.Test A8 #DEPENDS Tests.suite B.Test A6
-        --test Tests.suite B.Test A14 #DEPENDS Tests.suite B.Test A9 #DEPENDS Tests.suite B.Test A6
-        }
-        {
-        --test Tests.suite C.Test C1
-        --test Tests.suite C.Test C2
-        --test Tests.suite C.Test C3
-        --test Tests.suite C.Test C4 #DEPENDS Tests.suite C.Test C1 #DEPENDS Tests.suite C.Test C2 #DEPENDS Tests.suite C.Test C3
-        }
-        --test Tests.Test D1
-        --test Tests.Test D2
-        --test Test E1
-        {
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A1 
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A2 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A1
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A3 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A2
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A4 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A3
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A5 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A4
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A6 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A5
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A7 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A6
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A8 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A7
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A9 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A8
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A10 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A9
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A11 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A10
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A12 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A11
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A13 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A12
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A14 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A13
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A15 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A14
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A16 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A15
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A17 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A16
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A18 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A17
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A19 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A18
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A20 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A19
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A21 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A20
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A22 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A21
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A23 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A22
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A24 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A23
-        --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A25 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A24
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A1
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A2 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A1
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A3 
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A4 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A3
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A5 
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A6 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A5
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A7 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A2 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A4 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A6
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A8 
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A9 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A8 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A7
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A10 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A9
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A11 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A9
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A12 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A9
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A13 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A10 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A11 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A12
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A14 
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A15
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A16
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A17 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A14
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A18 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A15
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A19 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A16
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A20 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A17 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A18 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A19
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A21 
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A22
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A23 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A21 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A22
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A24 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A20 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A23
-        --test Tests.suite D.subsuite A.subsubsuite A.Test A25 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A13 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A24
-        --test Tests.suite D.subsuite A.Test A1
-        --test Tests.suite D.subsuite A.Test A2
-        --test Tests.suite D.subsuite A.Test A3
-        --test Tests.suite D.subsuite A.Test A4
-        --test Tests.suite D.subsuite A.Test A5
-        --test Tests.suite D.subsuite A.Test A6
-        --test Tests.suite D.subsuite A.Test A7
-        --test Tests.suite D.subsuite A.Test A8
-        --test Tests.suite D.subsuite A.Test A9
-        --test Tests.suite D.subsuite A.Test A10
-        --test Tests.suite D.subsuite A.Test A11
-        --test Tests.suite D.subsuite A.Test A12
-        --test Tests.suite D.subsuite A.Test A13
-        --test Tests.suite D.subsuite A.Test A14
-        --test Tests.suite D.subsuite A.Test A15
-        --test Tests.suite D.subsuite A.Test A16
-        --test Tests.suite D.subsuite A.Test A17
-        --test Tests.suite D.subsuite A.Test A18
-        --test Tests.suite D.subsuite A.Test A19
-        --test Tests.suite D.subsuite A.Test A20
-        --test Tests.suite D.subsuite A.Test A21
-        --test Tests.suite D.subsuite A.Test A22
-        --test Tests.suite D.subsuite A.Test A23
-        --test Tests.suite D.subsuite A.Test A24
-        --test Tests.suite D.subsuite A.Test A25
-        --test Tests.suite D.Test A1
-        --test Tests.suite D.Test A2
-        --test Tests.suite D.Test A3
-        --test Tests.suite D.Test A4
-        --test Tests.suite D.Test A5
-        --test Tests.suite D.Test A6
-        --test Tests.suite D.Test A7
-        --test Tests.suite D.Test A8
-        --test Tests.suite D.Test A9
-        --test Tests.suite D.Test A10
-        --test Tests.suite D.Test A11
-        --test Tests.suite D.Test A12
-        --test Tests.suite D.Test A13
-        --test Tests.suite D.Test A14
-        --test Tests.suite D.Test A15
-        --test Tests.suite D.Test A16
-        --test Tests.suite D.Test A17
-        --test Tests.suite D.Test A18
-        --test Tests.suite D.Test A19
-        --test Tests.suite D.Test A20
-        --test Tests.suite D.Test A21
-        --test Tests.suite D.Test A22
-        --test Tests.suite D.Test A23
-        --test Tests.suite D.Test A24
-        --test Tests.suite D.Test A25
-        }
-        """
-        
-        lines = test_data.strip().split('\n')
+    def parse_tests_file(self, data):        
+        lines = data.strip().split('\n')
         for line in lines:
             line = line.strip()
             if line.startswith('--test'):
@@ -407,7 +281,7 @@ class TestUI:
                 deps = []
                 for n in range(1, len(data)):
                     deps.append(data[n].strip())
-                print("test name:", test_name)
+                #print("test name:", test_name)
                 self.tests[test_name] = {"name": test_name, "dependencies": deps}
                 self.test_order.append(test_name)
             
@@ -544,6 +418,7 @@ class TestUI:
 
         # Show total count
         self.total_selected_label.config(text=f"Total Selected Tests: {len(full_selected)}")
+        self.all_current_selected_test_cases = full_selected
 
         self.canvas.scale("all", 0, 0, self.canvas_scale, self.canvas_scale)
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
@@ -704,17 +579,155 @@ class TestUI:
 
 
     def export_and_close(self):
-        selected = [name for name, var in self.test_vars.items() if var.get()]
-        print("Chosen Test Cases:", selected)
+        self.selected_tests_result = list(self.all_current_selected_test_cases)
         self.root.destroy()
 
 
-def main():
+def main_application(data, default_test_cases):
     root = tk.Tk()
-    app = TestUI(root)
+    app = TestUI(root, data, default_test_cases)
     root.geometry("1920x1080")
     root.mainloop()
+    selected_tests = getattr(app, "selected_tests_result", None)
+    return selected_tests
+
 
 
 if __name__ == "__main__":
-    main()
+    test_data = """
+    --test Tests.suite A.Test A5
+    {
+    --test Tests.suite A.Test A1
+    --test Tests.suite A.Test A2 #DEPENDS Tests.suite A.Test A1
+    --test Tests.suite A.Test A3 #DEPENDS Tests.suite A.Test A2
+    --test Tests.suite A.Test A4 #DEPENDS Tests.suite A.Test A3
+    }
+    {
+    --test Tests.suite B.Test A6
+    --test Tests.suite B.Test A7 #DEPENDS Tests.suite B.Test A6
+    --test Tests.suite B.Test A8 #DEPENDS Tests.suite B.Test A6 
+    --test Tests.suite B.Test A9 #DEPENDS Tests.suite B.Test A6 
+    --test Tests.suite B.Test A10 #DEPENDS Tests.suite B.Test A7
+    --test Tests.suite B.Test A11 #DEPENDS Tests.suite B.Test A7
+    --test Tests.suite B.Test A12 #DEPENDS Tests.suite B.Test A8 
+    --test Tests.suite B.Test A13 #DEPENDS Tests.suite B.Test A8 #DEPENDS Tests.suite B.Test A6
+    --test Tests.suite B.Test A14 #DEPENDS Tests.suite B.Test A9 #DEPENDS Tests.suite B.Test A6
+    }
+    {
+    --test Tests.suite C.Test C1
+    --test Tests.suite C.Test C2
+    --test Tests.suite C.Test C3
+    --test Tests.suite C.Test C4 #DEPENDS Tests.suite C.Test C1 #DEPENDS Tests.suite C.Test C2 #DEPENDS Tests.suite C.Test C3
+    }
+    --test Tests.Test D1
+    --test Tests.Test D2
+    --test Test E1
+    {
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A1 
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A2 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A1
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A3 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A2
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A4 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A3
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A5 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A4
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A6 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A5
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A7 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A6
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A8 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A7
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A9 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A8
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A10 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A9
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A11 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A10
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A12 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A11
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A13 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A12
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A14 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A13
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A15 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A14
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A16 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A15
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A17 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A16
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A18 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A17
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A19 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A18
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A20 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A19
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A21 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A20
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A22 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A21
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A23 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A22
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A24 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A23
+    --test Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A25 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.subsubsubsuite A.Test A24
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A1
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A2 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A1
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A3 
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A4 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A3
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A5 
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A6 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A5
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A7 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A2 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A4 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A6
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A8 
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A9 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A8 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A7
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A10 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A9
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A11 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A9
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A12 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A9
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A13 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A10 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A11 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A12
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A14 
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A15
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A16
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A17 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A14
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A18 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A15
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A19 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A16
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A20 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A17 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A18 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A19
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A21 
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A22
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A23 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A21 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A22
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A24 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A20 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A23
+    --test Tests.suite D.subsuite A.subsubsuite A.Test A25 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A13 #DEPENDS Tests.suite D.subsuite A.subsubsuite A.Test A24
+    --test Tests.suite D.subsuite A.Test A1
+    --test Tests.suite D.subsuite A.Test A2
+    --test Tests.suite D.subsuite A.Test A3
+    --test Tests.suite D.subsuite A.Test A4
+    --test Tests.suite D.subsuite A.Test A5
+    --test Tests.suite D.subsuite A.Test A6
+    --test Tests.suite D.subsuite A.Test A7
+    --test Tests.suite D.subsuite A.Test A8
+    --test Tests.suite D.subsuite A.Test A9
+    --test Tests.suite D.subsuite A.Test A10
+    --test Tests.suite D.subsuite A.Test A11
+    --test Tests.suite D.subsuite A.Test A12
+    --test Tests.suite D.subsuite A.Test A13
+    --test Tests.suite D.subsuite A.Test A14
+    --test Tests.suite D.subsuite A.Test A15
+    --test Tests.suite D.subsuite A.Test A16
+    --test Tests.suite D.subsuite A.Test A17
+    --test Tests.suite D.subsuite A.Test A18
+    --test Tests.suite D.subsuite A.Test A19
+    --test Tests.suite D.subsuite A.Test A20
+    --test Tests.suite D.subsuite A.Test A21
+    --test Tests.suite D.subsuite A.Test A22
+    --test Tests.suite D.subsuite A.Test A23
+    --test Tests.suite D.subsuite A.Test A24
+    --test Tests.suite D.subsuite A.Test A25
+    --test Tests.suite D.Test A1
+    --test Tests.suite D.Test A2
+    --test Tests.suite D.Test A3
+    --test Tests.suite D.Test A4
+    --test Tests.suite D.Test A5
+    --test Tests.suite D.Test A6
+    --test Tests.suite D.Test A7
+    --test Tests.suite D.Test A8
+    --test Tests.suite D.Test A9
+    --test Tests.suite D.Test A10
+    --test Tests.suite D.Test A11
+    --test Tests.suite D.Test A12
+    --test Tests.suite D.Test A13
+    --test Tests.suite D.Test A14
+    --test Tests.suite D.Test A15
+    --test Tests.suite D.Test A16
+    --test Tests.suite D.Test A17
+    --test Tests.suite D.Test A18
+    --test Tests.suite D.Test A19
+    --test Tests.suite D.Test A20
+    --test Tests.suite D.Test A21
+    --test Tests.suite D.Test A22
+    --test Tests.suite D.Test A23
+    --test Tests.suite D.Test A24
+    --test Tests.suite D.Test A25
+    }
+    """
+    selected_tests = main_application(test_data, ['Tests.suite A.Test A5'])
+
+    if selected_tests is not None:
+        print("Chosen tests:", selected_tests)
+    else:
+        print("No tests selected.")

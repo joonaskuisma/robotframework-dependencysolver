@@ -13,6 +13,7 @@ from robot.utils import Matcher
 from collections.abc import Iterable
 from ._version import __version__
 from .sort_ordering import sort_by_output_xml
+from .ui import main_application
 
 
 rf_version = tuple(map(int, robot.__version__.split(".")))
@@ -181,6 +182,12 @@ Optionally, a custom random seed can be provided using the syntax VALUE;SEED, wh
 NOTE: Since the general delimiter for prerunmodifier arguments is `:`, unlike in the Robot Framework syntax, 
 a semicolon `;` must be used as the delimiter instead.
 """
+HELP_UI = """When enabled, launches a GUI for selecting and visualizing tests and their dependencies. 
+Selected tests are incorporated into the Robot Framework execution upon closing the interface. 
+Detailed GUI documentation is available via Help -> Info in the menu bar. 
+Note that --test, --suite, --include, and --exclude options are applied first, serving as the initial selection for the GUI.
+The --exclude_explicit option is applied after the GUI is closed.
+"""
 
 
 def print_prog_name():
@@ -235,6 +242,7 @@ class DependencyArgumentParser(argparse.ArgumentParser):
         solver_options.add_argument('--consoleloglevel', default='INFO', type=uppercase_type, choices=['ERROR', 'WARNING', 'INFO', 'DEBUG'], help=HELP_CONSOLE_LOGLEVEL)
         solver_options.add_argument('--src_file', action='store', type=argparse.FileType('r', encoding='utf-8'), help=HELP_SCR_FILE)
         solver_options.add_argument('--pabotlevel', default='FULL', type=uppercase_type, choices=['NONE', 'GROUP', 'FULL', 'OPTIMIZED'], help=HELP_PABOT)
+        solver_options.add_argument('--ui', action='store_true', help=HELP_UI)
         
         self.add_argument('--version', action='version', version=f'Running {repr(NAME)} from robotframework-dependencylibrary {__version__}')
 
@@ -708,6 +716,12 @@ class DependencySolver(SuiteVisitor):
         # Returning right order of test cases
         self.desired_tests = [t for t in self.test_cases if t in desired_test_set]
 
+        if self.args.ui:
+            self.logger.info(f"Initializing GUI...")
+            self.ui_default_tc = self.desired_tests.copy()
+            # Choosing all test
+            self.desired_tests = [t for t in self.test_cases]
+
         if self.args.rerun:
             self.logger.debug(
                 "Rerun mode activated, so tests are only selected based on 'output.xml' or another given file."
@@ -750,6 +764,16 @@ class DependencySolver(SuiteVisitor):
         if not self.list_of_running_tests_names:
             self.logger.warning("No tests chosen.")
 
+        if self.args.ui:
+            self.logger.info(f"Starting GUI with default tests: {self.ui_default_tc}")
+            all_tests = self._write_depends_ordering(f'{PROG_CALL}.all_dependencies.txt')
+            # Staring UI
+            self.list_of_running_tests_names = main_application(all_tests, self.ui_default_tc)
+            for t in self.test_cases:
+                self.test_cases[t].solved_test_dependencies = [d for d in self.test_cases[t].solved_test_dependencies if d in self.list_of_running_tests_names]
+                self.test_cases[t].direct_precondition_for_tests = [p for p in self.test_cases[t].direct_precondition_for_tests if p in self.list_of_running_tests_names]
+            self.logger.info(f"Closing GUI. Chosen tests are: {self.list_of_running_tests_names}")
+
         if self.args.pabotlevel != 'NONE':
             self._write_depends_ordering()
 
@@ -781,7 +805,8 @@ class DependencySolver(SuiteVisitor):
                     _find_all_initial_test_starting_from(start_point, tc)
             else:
                 if full_name in self.initial_endings:
-                    self.initial_endings[full_name].append(start_point)
+                    if start_point not in self.initial_endings[full_name]:
+                        self.initial_endings[full_name].append(start_point)
                 else:
                     self.initial_endings[full_name] = [start_point]
 
@@ -791,7 +816,8 @@ class DependencySolver(SuiteVisitor):
                     _find_all_ending_test_starting_from(start_point, tc)
             else:
                 if full_name in self.ending_initials:
-                    self.ending_initials[full_name].append(start_point)
+                    if start_point not in self.ending_initials[full_name]:
+                        self.ending_initials[full_name].append(start_point)
                 else:
                     self.ending_initials[full_name] = [start_point]
 
@@ -833,7 +859,8 @@ class DependencySolver(SuiteVisitor):
                     these_are_checked.append(e)
 
 
-    def _write_depends_ordering(self) -> None:
+    def _write_depends_ordering(self, filename=f'{PROG_CALL}.pabot.txt') -> str:
+        # TODO: Optimize!
         """Used for pabot to write ordering.txt file as name depsol.pabot.txt."""
         all_text = ""
         ordered_list = [t for t in self.test_cases if t in self.list_of_running_tests_names]
@@ -890,8 +917,10 @@ class DependencySolver(SuiteVisitor):
             group_text += group_end_text
             all_text += group_text
 
-        with open(f'{PROG_CALL}.pabot.txt', 'w') as f:
+        with open(filename, 'w') as f:
             f.write(all_text)
+
+        return all_text
 
 
     def start_suite(self, suite: TestSuite) -> None:
