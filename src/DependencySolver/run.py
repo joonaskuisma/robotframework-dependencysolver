@@ -24,7 +24,7 @@ def build_command():
         prerun_call = '--pabotprerunmodifier'
         unknown.extend(['--testlevelsplit', '--ordering', f'{PROG_CALL}.pabot.txt'])
 
-    if not any(arg for arg in [args.test, args.suite, args.include, args.exclude, args.exclude_explicit, args.rerun]):
+    if not any(arg for arg in [args.test, args.suite, args.include, args.exclude, args.exclude_explicit, args.rerun, args.ui]):
         print(f"WARNING: To use '{PROG_CALL}', please provide a parameter related to test selection, for example '--test' or '--include'. See: '{PROG_CALL} --help'" )
     
     prerun_params = {
@@ -34,6 +34,7 @@ def build_command():
         'exclude': args.exclude,
         'exclude_explicit': args.exclude_explicit,
         'rerun': args.rerun,
+        'randomize': args.randomize,
         'reverse': args.reverse,
         'debug': args.debug,
         'without_timestamps': args.without_timestamps,
@@ -41,6 +42,7 @@ def build_command():
         'consoleloglevel': args.consoleloglevel,
         'src_file': args.src_file,  # type: io.TextIOBase
         'pabotlevel': args.pabotlevel,
+        'ui': args.ui,
     }
 
     command = [args.tool]
@@ -51,6 +53,11 @@ def build_command():
             prerun_modifier += f'--{prerun_params}:'
         elif isinstance(values, str) and values:
             prerun_modifier += f'--{prerun_params}:{values}:'
+        elif isinstance(values, tuple) and values:
+            if values[1] is not None:
+                prerun_modifier += f'--{prerun_params}:{values[0]};{str(values[1])}:'
+            else:
+                prerun_modifier += f'--{prerun_params}:{values[0]}:'
         elif isinstance(values, list) and values:
             for value in values:
                 prerun_modifier += f'--{prerun_params}:{value}:'
@@ -65,7 +72,8 @@ def build_command():
     prerun_modifier_cmd = [prerun_call, f'{PROG_NAME}:{prerun_modifier[:-1]}']
     command.extend(prerun_modifier_cmd)
     command.extend(unknown)
-
+    
+    print(command)
     return command
 
 

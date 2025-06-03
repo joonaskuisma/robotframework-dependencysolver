@@ -1,4 +1,4 @@
-[ INFO ] The following arguments were obtained: ('--test', 'suite*.T*t[AB]?', '--test', 'Test[!Bb]1', '--test', 'Test[AB][!2-6]', '--suite', 'data_1.*[Aa]', '--include', 'allANDAORtestBNOTt3', '--include', 't1ANDallANDA', '--exclude', 'allANDt2', '--exclude', 'NOT[AB]1', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
+[ INFO ] The following arguments were obtained: ('--test', 'suite*.T*t[AB]?', '--test', 'Test[!Bb]1', '--test', 'Test[AB][!2-6]', '--suite', 'data_1.*[Aa]', '--include', 'allANDAORtestBNOTt3', '--include', 't1ANDallANDA', '--exclude', 'allANDt2', '--exclude', 'NOT[AB]1', '--randomize', 'NONE', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
 [ DEBUG ] Started suite: 'Data 1'
 [ INFO ] Starting to explore the dependencies...
 [ DEBUG ] Investigating subsuite 'Data 1.suiteA'

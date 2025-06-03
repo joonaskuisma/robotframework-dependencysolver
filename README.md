@@ -53,7 +53,7 @@ To function correctly, **DependencySolver** requires the following versions:
 
 Additionally, for parallel test execution, you can optionally use:  
 
-- **robotframework-pabot** > 4.1  
+- **robotframework-pabot** >= 4.1  
 
 ## Installation
 
@@ -271,6 +271,11 @@ For example:
 ```cmd
 robot --prerunmodifier DependencySolver.depsol:-i:tagC:-t:"Test B" <your_test_folder>
 ```
+
+You can launch the simple UI of the Dependency Solver using the --ui parameter. 
+This interface allows you to select tests for execution through a tree view and visualizes dependencies between tests using arrows.
+
+**Note:** The UI is currently in Beta, so feedback and bug reports are very welcome. Its documentation will also improve over time.
 
 For more options and help, please run
 

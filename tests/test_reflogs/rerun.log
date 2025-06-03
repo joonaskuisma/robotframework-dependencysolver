@@ -1,4 +1,4 @@
-[ INFO ] The following arguments were obtained: ('--include', 'ALL', '--rerun', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
+[ INFO ] The following arguments were obtained: ('--include', 'ALL', '--rerun', '--randomize', 'NONE', '--debug', '--without_timestamps', '--fileloglevel', 'DEBUG', '--consoleloglevel', 'INFO', '--pabotlevel', 'FULL')
 [ INFO ] Rerunner started
 [ DEBUG ] Re-running test case 'Data 7.Subsuite A.suite D.Test D1'
 [ DEBUG ] Re-running test case 'Data 7.Subsuite A.suite G.Test G1'
