@@ -6,9 +6,11 @@ env/
 *report.html
 depsol.pabot*.txt
 depsol.log
+depsol.all_dependencies.txt
 .pabotsuitenames
 pabot_results/
 TODO
+.tmp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

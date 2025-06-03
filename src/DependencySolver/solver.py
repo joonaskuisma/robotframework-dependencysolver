@@ -3,7 +3,6 @@
 
 import argparse
 import logging
-import os  # Tarvitaanko?
 import robot
 import time
 import random
