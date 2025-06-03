@@ -1,3 +1,14 @@
+# [v1.2.0] - 2025-06-03
+
+## 🚀 Release Notes
+
+### 🔥 What's New?
+- ✨ Feature 1: --randomize option: Enables randomized test order. (#5)
+- 🎉 Feature 2: --ui option: Launches a simple GUI (#6)
+
+### 🔄 Commit Changes Since Last Version (v1.1.0):
+- Add support for --randomize and --ui options (#7) (Joonas Kuisma)
+
 # [v1.1.0] - 2025-03-06
 
 ## 🚀 Release Notes
