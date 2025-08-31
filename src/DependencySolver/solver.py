@@ -6,13 +6,13 @@ import logging
 import robot
 import time
 import random
+import platform
 from robot.api import ExecutionResult, SuiteVisitor, ResultVisitor
 from robot.model import TestCase, TestSuite, TagPatterns
 from robot.utils import Matcher
 from collections.abc import Iterable
 from ._version import __version__
 from .sort_ordering import sort_by_output_xml
-from .ui import main_application
 
 
 rf_version = tuple(map(int, robot.__version__.split(".")))
@@ -186,6 +186,7 @@ Selected tests are incorporated into the Robot Framework execution upon closing 
 Detailed GUI documentation is available via Help -> Info in the menu bar. 
 Note that --test, --suite, --include, and --exclude options are applied first, serving as the initial selection for the GUI.
 The --exclude_explicit option is applied after the GUI is closed.
+NOTE: On Linux systems, you may need to install the Python tkinter module separately in order to use the GUI.
 """
 
 
@@ -429,6 +430,52 @@ class DependencySolver(SuiteVisitor):
             return '.'.join([TestSuite.name_from_source(n) for n in name.split('.')])
         else:
             return '.'.join([self._name_from_source_legacy(n) for n in name.split('.')])
+        
+    
+    def check_tkinter(self) -> bool:
+        try:
+            import tkinter
+            return True
+        except ImportError:
+            os_name = platform.system()
+            self.logger.warning("Tkinter is not installed on your system. "
+                                "Tkinter is required for the graphical user interface (GUI).")
+
+            if os_name == "Linux":
+                self.logger.info("You are running on Linux. Install Tkinter with your package manager:")
+                # platform.linux_distribution() is deprecated in Python 3.8+, so we use os-release file
+                distro = ""
+                try:
+                    with open("/etc/os-release") as f:
+                        data = f.read().lower()
+                    if "ubuntu" in data or "debian" in data:
+                        distro = "debian"
+                    elif "fedora" in data or "rhel" in data:
+                        distro = "fedora"
+                    elif "arch" in data:
+                        distro = "arch"
+                except FileNotFoundError:
+                    pass
+
+                if distro == "debian":
+                    self.logger.info("  sudo apt-get install python3-tk")
+                elif distro == "fedora":
+                    self.logger.info("  sudo dnf install python3-tkinter")
+                elif distro == "arch":
+                    self.logger.info("  sudo pacman -S tk")
+                else:
+                    self.logger.info("  (Please use your distribution's package manager, e.g., apt, dnf, yum, or pacman)")
+            elif os_name == "Windows":
+                self.logger.info("You are running on Windows.")
+                self.logger.info("Tkinter usually comes with Python on Windows. Please reinstall Python with 'tcl/tk and IDLE' enabled.")
+            elif os_name == "Darwin":  # macOS
+                self.logger.info("You are running on macOS.")
+                self.logger.info("Tkinter should come with Python from python.org. If missing, reinstall Python from python.org, or install via:")
+                self.logger.info("  brew install python-tk")
+            else:
+                self.logger.info("Unknown OS. Please install Tkinter manually for your system.")
+            self.logger.info("Starting DependencySolver without requested GUI...")
+            return False
 
 
     def _matcher(self, name: str, list_of_names: Iterable[str]) -> list[str]:
@@ -763,10 +810,11 @@ class DependencySolver(SuiteVisitor):
         if not self.list_of_running_tests_names:
             self.logger.warning("No tests chosen.")
 
-        if self.args.ui:
+        if self.args.ui and self.check_tkinter():
+            from .ui import main_application
             self.logger.info(f"Starting GUI with default tests: {self.ui_default_tc}")
             all_tests = self._write_depends_ordering(f'{PROG_CALL}.all_dependencies.txt')
-            # Staring UI
+            # Starting GUI
             self.list_of_running_tests_names = main_application(all_tests, self.ui_default_tc)
             for t in self.test_cases:
                 self.test_cases[t].solved_test_dependencies = [d for d in self.test_cases[t].solved_test_dependencies if d in self.list_of_running_tests_names]

@@ -272,7 +272,7 @@ For example:
 robot --prerunmodifier DependencySolver.depsol:-i:tagC:-t:"Test B" <your_test_folder>
 ```
 
-You can launch the simple UI of the Dependency Solver using the --ui parameter. 
+You can launch the simple GUI of the Dependency Solver using the --ui parameter. 
 This interface allows you to select tests for execution through a tree view and visualizes dependencies between tests using arrows.
 
 **Note:** The UI is currently in Beta, so feedback and bug reports are very welcome. Its documentation will also improve over time.
