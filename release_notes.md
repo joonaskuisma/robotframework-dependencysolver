@@ -1,5 +1,4 @@
 ## 🚀 Release Notes
 
-### 🔥 What's New?
-- ✨ Feature 1: --randomize option: Enables randomized test order. (#5)
-- 🎉 Feature 2: --ui option: Launches a simple GUI (#6)
+### 🐞 Bug Fixes
+- 🛠 Fixed issue #8 where after adding GUI, DependencySolver does not work anymore without tkinter installed even without --ui option.

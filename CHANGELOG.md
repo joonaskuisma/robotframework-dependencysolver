@@ -1,3 +1,13 @@
+# [v1.2.1] - 2025-08-31
+
+## 🚀 Release Notes
+
+### 🐞 Bug Fixes
+- 🛠 Fixed issue #8 where after adding GUI, DependencySolver does not work anymore without tkinter installed even without --ui option.
+
+### 🔄 Commit Changes Since Last Version (v1.2.0):
+- bugfix: Missing tkinter import on Linux (#8) (#9) (Joonas Kuisma)
+
 # [v1.2.0] - 2025-06-03
 
 ## 🚀 Release Notes
